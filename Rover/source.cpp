@@ -2,17 +2,11 @@
 //Wy³šczanie b³êdów przed "fopen"
 #define  _CRT_SECURE_NO_WARNINGS
 
-
-
 // £adowanie bibliotek:
-
 #ifdef _MSC_VER                         // Check if MS Visual C compiler
 #  pragma comment(lib, "opengl32.lib")  // Compiler-specific directive to avoid manually configuration
 #  pragma comment(lib, "glu32.lib")     // Link libraries
 #endif
-
-
-
 
 // Ustalanie trybu tekstowego:
 #ifdef _MSC_VER        // Check if MS Visual C compiler
@@ -26,23 +20,27 @@
 #      undef UNICODE 
 #   endif
 #endif
+
 #include <windows.h>            // Window defines
 #include <gl\gl.h>              // OpenGL
 #include <gl\glu.h>             // GLU library
 #include <math.h>				// Define for sqrt
 #include <stdio.h>
 #include "../resource.h" // About box resource identifiers.
+#include "Solid.h"
+#include "Wheel.h"
+
+#include "Rover.h"
 
 #define glRGB(x, y, z)	glColor3ub((GLubyte)x, (GLubyte)y, (GLubyte)z)
 #define BITMAP_ID 0x4D42		// identyfikator formatu BMP
-#define GL_PI 3.14159
 
 // Color Palette handle
 HPALETTE hPalette = NULL;
 
 // Application name and instance storeage
-static LPCTSTR lpszAppName = "GL Template";
-static HINSTANCE hInstance;
+static LPCTSTR		lpszAppName = "GL Template";
+static HINSTANCE	hInstance;
 
 // Rotation amounts
 static GLfloat xRot = 0.0f;
@@ -60,19 +58,13 @@ unsigned int		texture[2];			// obiekt tekstury
 
 
 // Declaration for Window procedure
-LRESULT CALLBACK WndProc(HWND    hWnd,
-	UINT    message,
-	WPARAM  wParam,
-	LPARAM  lParam);
+LRESULT CALLBACK WndProc(HWND    hWnd, UINT    message, WPARAM  wParam, LPARAM  lParam);
 
 // Dialog procedure for about box
 BOOL APIENTRY AboutDlgProc(HWND hDlg, UINT message, UINT wParam, LONG lParam);
 
 // Set Pixel Format function - forward declaration
 void SetDCPixelFormat(HDC hDC);
-
-
-
 
 // Reduces a normal vector specified as a set of three coordinates,
 // to a unit normal vector of length one.
@@ -96,7 +88,6 @@ void ReduceToUnit(float vector[3])
 	vector[1] /= length;
 	vector[2] /= length;
 }
-
 
 // Points p1, p2, & p3 specified in counter clock-wise order
 void calcNormal(float v[3][3], float out[3])
@@ -124,8 +115,6 @@ void calcNormal(float v[3][3], float out[3])
 	// Normalize the vector (shorten length to one)
 	ReduceToUnit(out);
 }
-
-
 
 // Change viewing volume and viewport.  Called when window is resized
 void ChangeSize(GLsizei w, GLsizei h)
@@ -161,8 +150,6 @@ void ChangeSize(GLsizei w, GLsizei h)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
-
-
 
 // This function does any needed initialization on the rendering
 // context.  Here it sets up and initializes the lighting for
@@ -208,92 +195,6 @@ void SetupRC()
 	// Black brush
 	glColor3f(0.0, 0.0, 0.0);
 }
-
-void skrzynka(void)
-{
-	glColor3d(0.8, 0.7, 0.3);
-
-
-	glEnable(GL_TEXTURE_2D); // W³¹cz teksturowanie
-
-	glBindTexture(GL_TEXTURE_2D, texture[0]);
-	glBegin(GL_QUADS);
-	glNormal3d(0, 0, 1);
-	glTexCoord2d(1.0, 1.0); glVertex3d(25, 25, 25);
-	glTexCoord2d(0.0, 1.0); glVertex3d(-25, 25, 25);
-	glTexCoord2d(0.0, 0.0); glVertex3d(-25, -25, 25);
-	glTexCoord2d(1.0, 0.0); glVertex3d(25, -25, 25);
-	glEnd();
-	glBindTexture(GL_TEXTURE_2D, texture[1]);
-	glBegin(GL_QUADS);
-	glNormal3d(1, 0, 0);
-	glTexCoord2d(1.0, 1.0); glVertex3d(25, 25, 25);
-	glTexCoord2d(0.0, 1.0); glVertex3d(25, -25, 25);
-	glTexCoord2d(0.0, 0.0); glVertex3d(25, -25, -25);
-	glTexCoord2d(1.0, 0.0); glVertex3d(25, 25, -25);
-	glEnd();
-
-	glDisable(GL_TEXTURE_2D); // Wy³¹cz teksturowanie
-
-
-
-	glBegin(GL_QUADS);
-	glNormal3d(0, 0, -1);
-	glVertex3d(25, 25, -25);
-	glVertex3d(25, -25, -25);
-	glVertex3d(-25, -25, -25);
-	glVertex3d(-25, 25, -25);
-
-	glNormal3d(-1, 0, 0);
-	glVertex3d(-25, 25, -25);
-	glVertex3d(-25, -25, -25);
-	glVertex3d(-25, -25, 25);
-	glVertex3d(-25, 25, 25);
-
-	glNormal3d(0, 1, 0);
-	glVertex3d(25, 25, 25);
-	glVertex3d(25, 25, -25);
-	glVertex3d(-25, 25, -25);
-	glVertex3d(-25, 25, 25);
-
-	glNormal3d(0, -1, 0);
-	glVertex3d(25, -25, 25);
-	glVertex3d(-25, -25, 25);
-	glVertex3d(-25, -25, -25);
-	glVertex3d(25, -25, -25);
-	glEnd();
-}
-
-void walec01(void)
-{
-	GLUquadricObj*obj;
-	obj = gluNewQuadric();
-	gluQuadricNormals(obj, GLU_SMOOTH);
-	glColor3d(1, 0, 0);
-	glPushMatrix();
-	gluCylinder(obj, 20, 20, 30, 15, 7);
-	gluCylinder(obj, 0, 20, 0, 15, 7);
-	glTranslated(0, 0, 60);
-	glRotated(180.0, 0, 1, 0);
-	gluCylinder(obj, 0, 20, 30, 15, 7);
-	glPopMatrix();
-}
-
-void kula(void)
-{
-	GLUquadricObj*obj;
-	obj = gluNewQuadric();
-	gluQuadricTexture(obj, GL_TRUE);
-	glBindTexture(GL_TEXTURE_2D, texture[0]);
-	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-	glColor3d(1.0, 0.8, 0.8);
-	glEnable(GL_TEXTURE_2D);
-	gluSphere(obj, 40, 15, 7);
-	glDisable(GL_TEXTURE_2D);
-}
-
-
-
 
 // LoadBitmapFile
 // opis: ³aduje mapê bitow¹ z pliku i zwraca jej adres.
@@ -362,320 +263,9 @@ unsigned char *LoadBitmapFile(char *filename, BITMAPINFOHEADER *bitmapInfoHeader
 	return bitmapImage;
 }
 
-void ramie(double r1, double r2, double h, double d)
-{
-	double PI = 3.14, alpha, x, y;
-	glBegin(GL_TRIANGLE_FAN);
-	glColor3d(0.8, 0.0, 0);
-	glVertex3d(0, 0, 0);
-	for (alpha = PI; alpha <= 2 * PI; alpha += PI / 8.0)
-	{
-		x = r1 * sin(alpha);
-		y = r1 * cos(alpha);
-		glVertex3d(x, y, 0);
-	}
-	glEnd();
 
-	glBegin(GL_QUAD_STRIP);
-	for (alpha = 0; alpha >= -PI; alpha -= PI / 8.0)
-	{
-		x = r1 * sin(alpha);
-		y = r1 * cos(alpha);
-		glVertex3d(x, y, h);
-		glVertex3d(x, y, 0);
-	}
-	glEnd();
-
-	glBegin(GL_TRIANGLE_FAN);
-	glVertex3d(0, 0, h);
-	for (alpha = 0; alpha >= -PI; alpha -= PI / 8.0)
-	{
-		x = r1 * sin(alpha);
-		y = r1 * cos(alpha);
-		glVertex3d(x, y, h);
-	}
-	glEnd();
-
-	glBegin(GL_TRIANGLE_FAN);
-	glColor3d(0.8, 0.0, 0);
-	//glVertex3d(d,r2,0);
-	//glVertex3d(d, r2, h);
-	for (alpha = 0; alpha <= PI; alpha += PI / 8.0)
-	{
-		x = d + r2 * sin(alpha);
-		y = d + r2 * cos(alpha);
-		glVertex3d(x, y, 0);
-	}
-	glEnd();
-
-	glBegin(GL_QUAD_STRIP);
-	//glVertex3d(d, r2, 0);
-	for (alpha = 0; alpha <= PI; alpha += PI / 8.0)
-	{
-		x = d + r2 * sin(alpha);
-		y = d + r2 * cos(alpha);
-		glVertex3d(x, y, h);
-		glVertex3d(x, y, 0);
-	}
-	glEnd();
-
-	glBegin(GL_TRIANGLE_FAN);
-	//glVertex3d(d, r2, h);
-	for (alpha = 0; alpha <= PI; alpha += PI / 8.0)
-	{
-		x = d + r2 * sin(alpha);
-		y = d + r2 * cos(alpha);
-		glVertex3d(x, y, h);
-	}
-	glEnd();
-}
-
-void wheel(GLfloat point[3], double radius, double width)
-{
-	double x = point[0], y = point[1], z = point[2];
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	{
-		double x2, y2, z2, alpha;
-
-		glBegin(GL_TRIANGLE_FAN);
-		glColor3d(0.8, 0.0, 0);
-		glVertex3d(x - width / 2, y, z);
-		for (alpha = 0; alpha < 2 * GL_PI; alpha += GL_PI / 16.0)
-		{
-			y2 = y + radius * sin(alpha);
-			z2 = z + radius * cos(alpha);
-			glVertex3d(x - width / 2, y2, z2);
-		}
-		y2 = y + radius * sin(0);
-		z2 = z + radius * cos(0);
-		glVertex3d(x - width / 2, y2, z2);
-		glEnd();
-
-		glBegin(GL_TRIANGLE_STRIP);
-		glColor3d(0.0, 0.8, 0);
-		for (alpha = 0.0; alpha < 2 * GL_PI; alpha += GL_PI / 16.0)
-		{
-			y2 = radius * sin(alpha);
-			z2 = radius * cos(alpha);
-			glVertex3d(x - width / 2, y2 + y, z2 + z);
-			glVertex3d(x + width / 2, y2 + y, z2 + z);
-		}
-		y2 = radius * sin(0);
-		z2 = radius * cos(0);
-		glVertex3d(x - width / 2, y2 + y, z2 + z);
-		glVertex3d(x + width / 2, y2 + y, z2 + z);
-		glEnd();
-
-		glBegin(GL_TRIANGLE_FAN);
-		glColor3d(0.8, 0.0, 0);
-		glVertex3d(x + width / 2, y, z);
-		for (alpha = 0; alpha < 2 * GL_PI; alpha += GL_PI / 16.0)
-		{
-			y2 = y + radius * sin(alpha);
-			z2 = z + radius * cos(alpha);
-			glVertex3d(x + width / 2, y2, z2);
-		}
-		y2 = y + radius * sin(0);
-		z2 = z + radius * cos(0);
-		glVertex3d(x + width / 2, y2, z2);
-		glEnd();
-	};
-}
-
-void suspensionArm(GLfloat point[3], GLfloat point2[3], double w)
-{
-	double x = point[0], y = point[1], z = point[2];
-	double x2 = point2[0], y2 = point2[1], z2 = point2[2];
-	GLfloat p1[3] = { x - w / 2,y - w / 2,z };
-	GLfloat p2[3] = { x - w / 2,y + w / 2,z };
-	GLfloat p3[3] = { x + w / 2,y - w / 2,z };
-	GLfloat p4[3] = { x + w / 2,y + w / 2,z };
-
-	GLfloat p5[3] = { x2 - w / 2,y2 - w / 2,z2 };
-	GLfloat p6[3] = { x2 - w / 2,y2 + w / 2,z2 };
-	GLfloat p7[3] = { x2 + w / 2,y2 - w / 2,z2 };
-	GLfloat p8[3] = { x2 + w / 2,y2 + w / 2,z2 };
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	{
-		glBegin(GL_TRIANGLE_STRIP);
-		glColor3d(0.5, 0.5, 0.5);
-		glVertex3fv(p1);
-		glVertex3fv(p2);
-		glVertex3fv(p3);
-		glVertex3fv(p4);
-		glEnd();
-
-		glBegin(GL_TRIANGLE_STRIP);
-		glColor3d(0.5, 0.5, 0.5);
-		glVertex3fv(p1);
-		glVertex3fv(p5);
-		glVertex3fv(p3);
-		glVertex3fv(p7);
-		glVertex3fv(p4);
-		glVertex3fv(p8);
-		glVertex3fv(p2);
-		glVertex3fv(p6);
-		glVertex3fv(p1);
-		glVertex3fv(p5);
-		glEnd();
-
-		glBegin(GL_TRIANGLE_STRIP);
-		glColor3d(0.5, 0.5, 0.5);
-		glVertex3fv(p5);
-		glVertex3fv(p6);
-		glVertex3fv(p7);
-		glVertex3fv(p8);
-		glEnd();
-
-	};
-}
-
-void box(GLfloat point[3], double width, double length, double height)
-{
-	double x = point[0], y = point[1], z = point[2];
-	double x2, y2;
-	double i, k;
-	int n = 4;
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	{
-		glBegin(GL_TRIANGLE_STRIP);
-		glColor3d(0.0, 0.8, 0.8);
-		y2 = length / 2;
-		x2 = -width / 2;
-		for (i = 0; i <= length / n; i++)
-		{
-			glVertex3d(x2, y2, z + height / 2);
-			glVertex3d(x2, y2, z - height / 2);
-			y2 -= n;
-		}
-
-		for (i = 0; i < width / n; i++)
-		{
-			glVertex3d(x2, y2, z + height / 2);
-			glVertex3d(x2, y2, z - height / 2);
-			x2 += n;
-		}
-
-		for (i = 0; i <= length / n; i++)
-		{
-			glVertex3d(x2, y2, z + height / 2);
-			glVertex3d(x2, y2, z - height / 2);
-			y2 += n;
-		}
-
-		for (i = 0; i <= width / n; i++)
-		{
-			glVertex3d(x2, y2, z + height / 2);
-			glVertex3d(x2, y2, z - height / 2);
-			x2 -= n;
-		}
-		glEnd();
-
-		x2 = -width / 2;
-		y2 = length / 2;
-
-		for (k = 0; k < width / n; k++)
-		{
-			glBegin(GL_TRIANGLE_STRIP);
-			glColor3d(0.0, 0.6, 0.6);
-			for (i = 0; i <= (length / n) + 1; i++)
-			{
-				glVertex3d(x2, y2, z + height / 2);
-				glVertex3d(x2 + n, y2, z + height / 2);
-				y2 -= n;
-			}
-			x2 += n;
-			y2 = length / 2;
-			glEnd();
-		}
-
-		x2 = -width / 2;
-		y2 = length / 2;
-
-		for (k = 0; k < width / n; k++)
-		{
-			glBegin(GL_TRIANGLE_STRIP);
-			glColor3d(0.0, 0.6, 0.6);
-			for (i = 0; i <= (length / n) + 1; i++)
-			{
-				glVertex3d(x2, y2, z - height / 2);
-				glVertex3d(x2 + n, y2, z - height / 2);
-				y2 -= n;
-			}
-			x2 += n;
-			y2 = length / 2;
-			glEnd();
-		}
-	};
-
-}
-
-void rover(double x, double y, double z)
-{
-	double width = 20;
-	double length = 30;
-	double height = 5;
-	double wheelArmWidth = 1;
-	double rideHeigth = 12;
-	double wheelRadius = 5;
-	double wheelWidth = 2;
-	double suspensionShaft = wheelArmWidth * 1.3;
-
-	GLfloat body[3] = { x,y,z + rideHeigth + height / 2 };
-
-
-	GLfloat wlf[3] = { -width / 2 - wheelArmWidth - wheelWidth / 2 ,length / 2,wheelRadius / 2 }; // wheel left front 
-	GLfloat wlc[3] = { -width / 2 - wheelArmWidth - wheelWidth / 2 ,0,wheelRadius / 2 };
-	GLfloat wlb[3] = { -width / 2 - wheelArmWidth - wheelWidth / 2 ,-length / 2,wheelRadius / 2 };
-	GLfloat wrf[3] = { width / 2 + wheelArmWidth + wheelWidth / 2 ,length / 2,wheelRadius / 2 };
-	GLfloat wrc[3] = { width / 2 + wheelArmWidth + wheelWidth / 2 ,0,wheelRadius / 2 };
-	GLfloat wrb[3] = { width / 2 + wheelArmWidth + wheelWidth / 2 ,-length / 2,wheelRadius / 2 };
-
-	wheel(wlf, wheelRadius, wheelWidth);
-	wheel(wlc, wheelRadius, wheelWidth);
-	wheel(wlb, wheelRadius, wheelWidth);
-	wheel(wrf, wheelRadius, wheelWidth);
-	wheel(wrc, wheelRadius, wheelWidth);
-	wheel(wrb, wheelRadius, wheelWidth);
-
-
-	GLfloat bslf[3] = { -width / 2 - wheelArmWidth / 2,length / 3,rideHeigth + height / 2 }; // body suspension left front
-	GLfloat bslb[3] = { -width / 2 - wheelArmWidth / 2,-length / 4,rideHeigth + height / 2 };
-	GLfloat bsrf[3] = { width / 2 + wheelArmWidth / 2,length / 3,rideHeigth + height / 2 };
-	GLfloat bsrb[3] = { width / 2 + wheelArmWidth / 2,-length / 4,rideHeigth + height / 2 };
-
-	GLfloat wslf[3] = { -width / 2 - wheelArmWidth / 2 ,length / 2,wheelRadius / 2 }; // wheel suspension left front 
-	GLfloat wslc[3] = { -width / 2 - wheelArmWidth / 2 ,0,wheelRadius / 2 };
-	GLfloat wslb[3] = { -width / 2 - wheelArmWidth / 2 ,-length / 2,wheelRadius / 2 };
-	GLfloat wsrf[3] = { width / 2 + wheelArmWidth / 2 ,length / 2,wheelRadius / 2 };
-	GLfloat wsrc[3] = { width / 2 + wheelArmWidth / 2 ,0,wheelRadius / 2 };
-	GLfloat wsrb[3] = { width / 2 + wheelArmWidth / 2 ,-length / 2,wheelRadius / 2 };
-
-
-	suspensionArm(wslf, bslf, wheelArmWidth);
-	suspensionArm(wslc, bslb, wheelArmWidth);
-	suspensionArm(wslb, bslb, wheelArmWidth);
-	suspensionArm(wsrf, bsrf, wheelArmWidth);
-	suspensionArm(wsrc, bsrb, wheelArmWidth);
-	suspensionArm(wsrb, bsrb, wheelArmWidth);
-
-	wheel(wslf, suspensionShaft, suspensionShaft);
-	wheel(wslc, suspensionShaft, suspensionShaft);
-	wheel(wslb, suspensionShaft, suspensionShaft);
-	wheel(wsrf, suspensionShaft, suspensionShaft);
-	wheel(wsrc, suspensionShaft, suspensionShaft);
-	wheel(wsrb, suspensionShaft, suspensionShaft);
-
-	wheel(bslf, suspensionShaft, suspensionShaft);
-	wheel(bslb, suspensionShaft, suspensionShaft);
-	wheel(bsrf, suspensionShaft, suspensionShaft);
-	wheel(bsrb, suspensionShaft, suspensionShaft);
-
-	box(body, width, length, height);
-
-
-
-}
+GLfloat pos[3] = { 0,0,0 };
+auto rover = new Rover{ pos };
 // Called to draw scene
 void RenderScene(void)
 {
@@ -699,9 +289,9 @@ void RenderScene(void)
 
 	//Uzyskanie siatki:
 	//glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+	
 
-	rover(0, 0, 0);
-
+	rover->draw();
 
 	/////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////
