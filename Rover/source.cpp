@@ -2,17 +2,11 @@
 //Wy³šczanie b³êdów przed "fopen"
 #define  _CRT_SECURE_NO_WARNINGS
 
-
-
 // £adowanie bibliotek:
-
 #ifdef _MSC_VER                         // Check if MS Visual C compiler
 #  pragma comment(lib, "opengl32.lib")  // Compiler-specific directive to avoid manually configuration
 #  pragma comment(lib, "glu32.lib")     // Link libraries
 #endif
-
-
-
 
 // Ustalanie trybu tekstowego:
 #ifdef _MSC_VER        // Check if MS Visual C compiler
@@ -26,6 +20,7 @@
 #      undef UNICODE 
 #   endif
 #endif
+
 #include <windows.h>            // Window defines
 #include <gl\gl.h>              // OpenGL
 #include <gl\glu.h>             // GLU library
@@ -44,8 +39,8 @@
 HPALETTE hPalette = NULL;
 
 // Application name and instance storeage
-static LPCTSTR lpszAppName = "GL Template";
-static HINSTANCE hInstance;
+static LPCTSTR		lpszAppName = "GL Template";
+static HINSTANCE	hInstance;
 
 // Rotation amounts
 static GLfloat xRot = 0.0f;
@@ -63,19 +58,13 @@ unsigned int		texture[2];			// obiekt tekstury
 
 
 // Declaration for Window procedure
-LRESULT CALLBACK WndProc(HWND    hWnd,
-	UINT    message,
-	WPARAM  wParam,
-	LPARAM  lParam);
+LRESULT CALLBACK WndProc(HWND    hWnd, UINT    message, WPARAM  wParam, LPARAM  lParam);
 
 // Dialog procedure for about box
 BOOL APIENTRY AboutDlgProc(HWND hDlg, UINT message, UINT wParam, LONG lParam);
 
 // Set Pixel Format function - forward declaration
 void SetDCPixelFormat(HDC hDC);
-
-
-
 
 // Reduces a normal vector specified as a set of three coordinates,
 // to a unit normal vector of length one.
@@ -99,7 +88,6 @@ void ReduceToUnit(float vector[3])
 	vector[1] /= length;
 	vector[2] /= length;
 }
-
 
 // Points p1, p2, & p3 specified in counter clock-wise order
 void calcNormal(float v[3][3], float out[3])
@@ -127,8 +115,6 @@ void calcNormal(float v[3][3], float out[3])
 	// Normalize the vector (shorten length to one)
 	ReduceToUnit(out);
 }
-
-
 
 // Change viewing volume and viewport.  Called when window is resized
 void ChangeSize(GLsizei w, GLsizei h)
@@ -164,8 +150,6 @@ void ChangeSize(GLsizei w, GLsizei h)
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
-
-
 
 // This function does any needed initialization on the rendering
 // context.  Here it sets up and initializes the lighting for
@@ -211,7 +195,6 @@ void SetupRC()
 	// Black brush
 	glColor3f(0.0, 0.0, 0.0);
 }
-
 
 // LoadBitmapFile
 // opis: ³aduje mapê bitow¹ z pliku i zwraca jej adres.
@@ -282,8 +265,7 @@ unsigned char *LoadBitmapFile(char *filename, BITMAPINFOHEADER *bitmapInfoHeader
 
 
 GLfloat pos[3] = { 0,0,0 };
-auto rover = new Rover{pos};
-auto w1 = new Wheel{pos,100,32};
+auto rover = new Rover{ pos };
 // Called to draw scene
 void RenderScene(void)
 {
@@ -307,9 +289,9 @@ void RenderScene(void)
 
 	//Uzyskanie siatki:
 	//glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+	
 
 	rover->draw();
-
 
 	/////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////

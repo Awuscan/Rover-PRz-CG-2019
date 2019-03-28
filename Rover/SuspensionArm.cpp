@@ -57,3 +57,14 @@ void SuspensionArm::draw()
 
 	};
 }
+
+void SuspensionArm::move(GLfloat pos[3])
+{
+	this->pos[0] = pos[0];
+	this->pos[1] = pos[1];
+	this->pos[2] = pos[2];
+
+	posWheel[0] += pos[0];
+	posWheel[1] += pos[1];
+	posWheel[2] += pos[2];
+}

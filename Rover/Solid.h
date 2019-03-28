@@ -12,7 +12,7 @@ public:
 	Solid(GLfloat pos[3]);
 	~Solid();
 	virtual void draw();
+	virtual void move(GLfloat pos[3]);
 	GLfloat pos[3];
-
 };
 
