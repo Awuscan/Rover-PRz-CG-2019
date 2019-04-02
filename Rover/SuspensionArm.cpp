@@ -1,10 +1,10 @@
 #include "SuspensionArm.h"
 
-SuspensionArm::SuspensionArm(GLfloat pointBody[3], GLfloat pointWheel[3], GLfloat w) : Solid(pointBody), width(w)
+SuspensionArm::SuspensionArm(GLfloat posBody[3], GLfloat posWheel[3], GLfloat w, GLfloat color[3]) : Solid(posBody, color), width(w)
 {
-	posWheel[0] = pointWheel[0];
-	posWheel[1] = pointWheel[1];
-	posWheel[2] = pointWheel[2];
+	this->posWheel[0] = posWheel[0];
+	this->posWheel[1] = posWheel[1];
+	this->posWheel[2] = posWheel[2];
 }
 
 SuspensionArm::~SuspensionArm()
@@ -26,7 +26,7 @@ void SuspensionArm::draw()
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	{
 		glBegin(GL_TRIANGLE_STRIP);
-		glColor3d(0.5, 0.5, 0.5);
+		glColor3fv(color);
 		glVertex3fv(p1);
 		glVertex3fv(p2);
 		glVertex3fv(p3);
@@ -34,7 +34,7 @@ void SuspensionArm::draw()
 		glEnd();
 
 		glBegin(GL_TRIANGLE_STRIP);
-		glColor3d(0.5, 0.5, 0.5);
+		glColor3fv(color);
 		glVertex3fv(p1);
 		glVertex3fv(p5);
 		glVertex3fv(p3);
@@ -48,7 +48,7 @@ void SuspensionArm::draw()
 		glEnd();
 
 		glBegin(GL_TRIANGLE_STRIP);
-		glColor3d(0.5, 0.5, 0.5);
+		glColor3fv(color);
 		glVertex3fv(p5);
 		glVertex3fv(p6);
 		glVertex3fv(p7);
@@ -58,13 +58,13 @@ void SuspensionArm::draw()
 	};
 }
 
-void SuspensionArm::move(GLfloat pos[3])
+void SuspensionArm::move(GLfloat posBody[3], GLfloat posWheel[3])
 {
-	this->pos[0] = pos[0];
-	this->pos[1] = pos[1];
-	this->pos[2] = pos[2];
-
-	posWheel[0] += pos[0];
-	posWheel[1] += pos[1];
-	posWheel[2] += pos[2];
+	this->pos[0] = posBody[0];
+	this->pos[1] = posBody[1];
+	this->pos[2] = posBody[2];
+	this->posWheel[0] = posWheel[0];
+	this->posWheel[1] = posWheel[1];
+	this->posWheel[2] = posWheel[2];
 }
+

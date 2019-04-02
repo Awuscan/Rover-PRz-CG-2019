@@ -2,9 +2,104 @@
 
 
 
-Rover::Rover(GLfloat pos[3]) : Solid(pos)
+Rover::Rover(GLfloat pos[3]) : Solid(pos,this->bodyColor)
 {
-	
+	posWLF[0] = -width / 2 - wheelArmWidth - wheelWidth / 2 + pos[0];
+	posWLF[1] = length / 2 + pos[1];
+	posWLF[2] = wheelRadius / 2 + pos[2];
+
+	posWLC[0] = -width / 2 - wheelArmWidth - wheelWidth / 2 + pos[0];
+	posWLC[1] = pos[1];
+	posWLC[2] = wheelRadius / 2 + pos[2];
+
+	posWLB[0] = -width / 2 - wheelArmWidth - wheelWidth / 2 + pos[0];
+	posWLB[1] = -length / 2 + pos[1];
+	posWLB[2] = wheelRadius / 2 + pos[2];
+
+	posWRF[0] = width / 2 + wheelArmWidth + wheelWidth / 2 + pos[0];
+	posWRF[1] = length / 2 + pos[1];
+	posWRF[2] = wheelRadius / 2 + pos[2];
+
+	posWRC[0] = width / 2 + wheelArmWidth + wheelWidth / 2 + pos[0];
+	posWRC[1] = pos[1];
+	posWRC[2] = wheelRadius / 2 + pos[2];
+
+	posWRB[0] = width / 2 + wheelArmWidth + wheelWidth / 2 + pos[0];
+	posWRB[1] = -length / 2 + pos[1];
+	posWRB[2] = wheelRadius / 2 + pos[2];
+
+	posBSLF[0] = -width / 2 - wheelArmWidth / 2 + pos[0];
+	posBSLF[1] = length / 3 + pos[1];
+	posBSLF[2] = rideHeigth + height / 2 + pos[2];
+
+	posBSLB[0] = -width / 2 - wheelArmWidth / 2 + pos[0];
+	posBSLB[1] = -length / 4 + pos[1];
+	posBSLB[2] = rideHeigth + height / 2 + pos[2];
+
+	posBSRF[0] = width / 2 + wheelArmWidth / 2 + pos[0];
+	posBSRF[1] = length / 3 + pos[1];
+	posBSRF[2] = rideHeigth + height / 2 + pos[2];
+
+	posBSRB[0] = width / 2 + wheelArmWidth / 2 + pos[0];
+	posBSRB[1] = -length / 4 + pos[1];
+	posBSRB[2] = rideHeigth + height / 2 + pos[2];
+
+	posWSLF[0] = -width / 2 - wheelArmWidth / 2 + pos[0];
+	posWSLF[1] = length / 2 + pos[1];
+	posWSLF[2] = wheelRadius / 2 + pos[2];
+
+	posWSLC[0] = -width / 2 - wheelArmWidth / 2 + pos[0];
+	posWSLC[1] = pos[1];
+	posWSLC[2] = wheelRadius / 2 + pos[2];
+
+	posWSLB[0] = -width / 2 - wheelArmWidth / 2 + pos[0];
+	posWSLB[1] = -length / 2 + pos[1];
+	posWSLB[2] = wheelRadius / 2 + pos[2];
+
+	posWSRF[0] = width / 2 + wheelArmWidth / 2 + pos[0];
+	posWSRF[1] = length / 2 + pos[1];
+	posWSRF[2] = wheelRadius / 2 + pos[2];
+
+	posWSRC[0] = width / 2 + wheelArmWidth / 2 + pos[0];
+	posWSRC[1] = 0 + pos[1];
+	posWSRC[2] = wheelRadius / 2 + pos[2];
+
+	posWSRB[0] = width / 2 + wheelArmWidth / 2 + pos[0];
+	posWSRB[1] = -length / 2 + pos[1];
+	posWSRB[2] = wheelRadius / 2 + pos[2];
+
+	posBody[0] = pos[0];
+	posBody[1] = pos[1];
+	posBody[2] = pos[2] + rideHeigth + height / 2;
+
+	wlf.move(posWLF);
+	wlc.move(posWLC);
+	wlb.move(posWLB);
+	wrf.move(posWRF);
+	wrc.move(posWRC);
+	wrb.move(posWRB);
+
+	salf.move(posBSLF, posWSLF);
+	salc.move(posBSLB, posWSLC);
+	salb.move(posBSLB, posWSLB);
+	sarf.move(posBSRF, posWSRF);
+	sarc.move(posBSRB, posWSRC);
+	sarb.move(posBSRB, posWSRB);
+
+	wslf.move(posWSLF);
+	wslc.move(posWSLC);
+	wslb.move(posWSLB);
+	wsrf.move(posWSRF);
+	wsrc.move(posWSRC);
+	wsrb.move(posWSRB);
+
+	bslf.move(posBSLF);
+	bslb.move(posBSLB);
+	bsrf.move(posBSRF);
+	bsrb.move(posBSRB);
+
+	body.move(posBody);
+
 }
 
 
@@ -14,56 +109,6 @@ Rover::~Rover()
 
 void Rover::draw()
 {
-	GLfloat posWLF[3] = { -width / 2 - wheelArmWidth - wheelWidth / 2 + pos[0], length / 2 + pos[1],wheelRadius / 2 + pos[2] }; // wheel left front 
-	GLfloat posWLC[3] = { -width / 2 - wheelArmWidth - wheelWidth / 2 + pos[0],0 + pos[1],wheelRadius / 2 + pos[2] };
-	GLfloat posWLB[3] = { -width / 2 - wheelArmWidth - wheelWidth / 2 + pos[0],-length / 2 + pos[1],wheelRadius / 2 + pos[2] };
-	GLfloat posWRF[3] = { width / 2 + wheelArmWidth + wheelWidth / 2 + pos[0],length / 2 + pos[1],wheelRadius / 2 + pos[2] };
-	GLfloat posWRC[3] = { width / 2 + wheelArmWidth + wheelWidth / 2 + pos[0],0 + pos[1],wheelRadius / 2 + pos[2] };
-	GLfloat posWRB[3] = { width / 2 + wheelArmWidth + wheelWidth / 2 + pos[0],-length / 2 + pos[1],wheelRadius / 2 + pos[2] };
-
-	GLfloat posBSLF[3] = { -width / 2 - wheelArmWidth / 2 + pos[0],length / 3 + pos[1],rideHeigth + height / 2 + pos[2] }; // body suspension left front
-	GLfloat posBSLB[3] = { -width / 2 - wheelArmWidth / 2 + pos[0],-length / 4 + pos[1],rideHeigth + height / 2 + pos[2] };
-	GLfloat posBSRF[3] = { width / 2 + wheelArmWidth / 2 + pos[0],length / 3 + pos[1],rideHeigth + height / 2 + pos[2] };
-	GLfloat posBSRB[3] = { width / 2 + wheelArmWidth / 2 + pos[0],-length / 4 + pos[1],rideHeigth + height / 2 + pos[2] };
-
-	GLfloat posWSLF[3] = { -width / 2 - wheelArmWidth / 2 + pos[0],length / 2 + pos[1],wheelRadius / 2 + pos[2] }; // wheel suspension left front 
-	GLfloat posWSLC[3] = { -width / 2 - wheelArmWidth / 2 + pos[0],0 + pos[1],wheelRadius / 2 + pos[2] };
-	GLfloat posWSLB[3] = { -width / 2 - wheelArmWidth / 2 + pos[0],-length / 2 + pos[1],wheelRadius / 2 + pos[2] };
-	GLfloat posWSRF[3] = { width / 2 + wheelArmWidth / 2 + pos[0],length / 2 + pos[1],wheelRadius / 2 + pos[2] };
-	GLfloat posWSRC[3] = { width / 2 + wheelArmWidth / 2 + pos[0],0 + pos[1],wheelRadius / 2 + pos[2] };
-	GLfloat posWSRB[3] = { width / 2 + wheelArmWidth / 2 + pos[0],-length / 2 + pos[1],wheelRadius / 2 + pos[2] };
-
-	GLfloat posBody[3] = { pos[0],pos[1],pos[2] + rideHeigth + height / 2 };
-
-	Wheel wlf{ posWLF,wheelRadius,wheelWidth }; //wheel left front
-	Wheel wlc{ posWLC,wheelRadius,wheelWidth };
-	Wheel wlb{ posWLB,wheelRadius,wheelWidth };
-	Wheel wrf{ posWRF,wheelRadius,wheelWidth };
-	Wheel wrc{ posWRC,wheelRadius,wheelWidth };
-	Wheel wrb{ posWRB,wheelRadius,wheelWidth };
-
-	SuspensionArm  salf{ posBSLF, posWSLF, wheelArmWidth }; //suspension arm left front
-	SuspensionArm  salc{ posBSLB, posWSLC, wheelArmWidth };
-	SuspensionArm  salb{ posBSLB, posWSLB, wheelArmWidth };
-	SuspensionArm  sarf{ posBSRF, posWSRF, wheelArmWidth };
-	SuspensionArm  sarc{ posBSRB, posWSRC, wheelArmWidth };
-	SuspensionArm  sarb{ posBSRB, posWSRB, wheelArmWidth };
-
-	Wheel wslf{ posWSLF,suspensionShaftRadius,suspensionShaftLenght }; //suspension wheel left front
-	Wheel wslc{ posWSLC,suspensionShaftRadius,suspensionShaftLenght };
-	Wheel wslb{ posWSLB,suspensionShaftRadius,suspensionShaftLenght };
-	Wheel wsrf{ posWSRF,suspensionShaftRadius,suspensionShaftLenght };
-	Wheel wsrc{ posWSRC,suspensionShaftRadius,suspensionShaftLenght };
-	Wheel wsrb{ posWSRB,suspensionShaftRadius,suspensionShaftLenght };
-
-	Wheel bslf{ posBSLF,suspensionShaftRadius,suspensionShaftLenght };
-	Wheel bslb{ posBSLB,suspensionShaftRadius,suspensionShaftLenght };
-	Wheel bsrf{ posBSRF,suspensionShaftRadius,suspensionShaftLenght };
-	Wheel bsrb{ posBSRB,suspensionShaftRadius,suspensionShaftLenght };
-
-	Box body{ posBody,width,length,height }; //	body
-
-
 	wlf.draw();
 	wlc.draw();
 	wlb.draw();

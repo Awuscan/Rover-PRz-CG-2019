@@ -119,7 +119,7 @@ void calcNormal(float v[3][3], float out[3])
 // Change viewing volume and viewport.  Called when window is resized
 void ChangeSize(GLsizei w, GLsizei h)
 {
-	GLfloat nRange = 100.0f;
+	GLfloat nRange = 80.0f;
 	GLfloat fAspect;
 	// Prevent a divide by zero
 	if (h == 0)
@@ -290,7 +290,7 @@ void RenderScene(void)
 	//Uzyskanie siatki:
 	//glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
 	
-
+	
 	rover->draw();
 
 	/////////////////////////////////////////////////////////////////
@@ -509,7 +509,7 @@ LRESULT CALLBACK WndProc(HWND    hWnd,
 		glGenTextures(2, &texture[0]);                  // tworzy obiekt tekstury			
 
 		// ³aduje pierwszy obraz tekstury:
-		//bitmapData = LoadBitmapFile("Bitmapy\\checker.bmp", &bitmapInfoHeader);
+		bitmapData = LoadBitmapFile((char*)"Bitmapy\\checker.bmp", &bitmapInfoHeader);
 
 		glBindTexture(GL_TEXTURE_2D, texture[0]);       // aktywuje obiekt tekstury
 
@@ -527,7 +527,7 @@ LRESULT CALLBACK WndProc(HWND    hWnd,
 			free(bitmapData);
 
 		// ³aduje drugi obraz tekstury:
-		//bitmapData = LoadBitmapFile("Bitmapy\\crate.bmp", &bitmapInfoHeader);
+		bitmapData = LoadBitmapFile((char*)"Bitmapy\\crate.bmp", &bitmapInfoHeader);
 		glBindTexture(GL_TEXTURE_2D, texture[1]);       // aktywuje obiekt tekstury
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -668,13 +668,13 @@ LRESULT CALLBACK WndProc(HWND    hWnd,
 			break;
 
 			// Display the about box
-			/*case ID_HELP_ABOUT:
+			case ID_HELP_ABOUT:
 				DialogBox (hInstance,
 					MAKEINTRESOURCE(IDD_DIALOG_ABOUT),
 					hWnd,
 					AboutDlgProc);
 				break;
-			*/
+			
 		}
 	}
 	break;
@@ -704,16 +704,16 @@ BOOL APIENTRY AboutDlgProc(HWND hDlg, UINT message, UINT wParam, LONG lParam)
 		GLenum glError;
 
 		// glGetString demo
-		/*
-		SetDlgItemText(hDlg,IDC_OPENGL_VENDOR,glGetString(GL_VENDOR));
-		SetDlgItemText(hDlg,IDC_OPENGL_RENDERER,glGetString(GL_RENDERER));
-		SetDlgItemText(hDlg,IDC_OPENGL_VERSION,glGetString(GL_VERSION));
-		SetDlgItemText(hDlg,IDC_OPENGL_EXTENSIONS,glGetString(GL_EXTENSIONS));
+		
+		SetDlgItemText(hDlg,IDC_OPENGL_VENDOR, (LPCSTR)glGetString(GL_VENDOR));
+		SetDlgItemText(hDlg,IDC_OPENGL_RENDERER, (LPCSTR)glGetString(GL_RENDERER));
+		SetDlgItemText(hDlg,IDC_OPENGL_VERSION, (LPCSTR)glGetString(GL_VERSION));
+		SetDlgItemText(hDlg,IDC_OPENGL_EXTENSIONS, (LPCSTR)glGetString(GL_EXTENSIONS));
 
 		// gluGetString demo
-		SetDlgItemText(hDlg,IDC_GLU_VERSION,gluGetString(GLU_VERSION));
-		SetDlgItemText(hDlg,IDC_GLU_EXTENSIONS,gluGetString(GLU_EXTENSIONS));
-		*/
+		SetDlgItemText(hDlg,IDC_GLU_VERSION, (LPCSTR)gluGetString(GLU_VERSION));
+		SetDlgItemText(hDlg,IDC_GLU_EXTENSIONS, (LPCSTR)gluGetString(GLU_EXTENSIONS));
+		
 
 		// Display any recent error messages
 		i = 0;

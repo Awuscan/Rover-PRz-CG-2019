@@ -1,7 +1,7 @@
 #include "Box.h"
 
 
-Box::Box(GLfloat pos[3], GLfloat w, GLfloat l, GLfloat h) : Solid(pos), width(w), length(l), height(h)
+Box::Box(GLfloat pos[3], GLfloat w, GLfloat l, GLfloat h, GLfloat color[3]) : Solid(pos,color), width(w), length(l), height(h)
 {
 }
 
@@ -17,7 +17,7 @@ void Box::draw()
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	{
 		glBegin(GL_TRIANGLE_STRIP);
-		glColor3d(0.0, 0.8, 0.8);
+		glColor3fv(color);
 
 		x = -width / 2 + pos[0];
 		y = length / 2 + pos[1];
@@ -60,7 +60,8 @@ void Box::draw()
 		for (k = 0; k < width / n; k++)
 		{
 			glBegin(GL_TRIANGLE_STRIP);
-			glColor3d(0.0, 0.6, 0.6);
+			glColor3fv(color);
+
 			for (i = 0; i <= (length / n) + 1; i++)
 			{
 				glVertex3d(x, y, zup);
@@ -78,7 +79,8 @@ void Box::draw()
 		for (k = 0; k < width / n; k++)
 		{
 			glBegin(GL_TRIANGLE_STRIP);
-			glColor3d(0.0, 0.6, 0.6);
+			glColor3fv(color);
+
 			for (i = 0; i <= (length / n) + 1; i++)
 			{
 				glVertex3d(x, y, zdown);

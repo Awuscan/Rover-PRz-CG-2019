@@ -4,10 +4,10 @@ class SuspensionArm :
 	public Solid
 {
 public:
-	SuspensionArm(GLfloat pointBody[3], GLfloat pointWheel[3], GLfloat width);
+	SuspensionArm(GLfloat posBody[3], GLfloat posWheel[3], GLfloat width, GLfloat color[3]);
 	~SuspensionArm();
 	void draw();
-	void move(GLfloat pos[3]);
+	void move(GLfloat posBody[3], GLfloat posWheel[3]);
 	GLfloat posWheel[3];
 	GLfloat width;
 };

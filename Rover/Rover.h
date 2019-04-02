@@ -18,10 +18,14 @@ public:
 	GLfloat wheelArmWidth = 2;
 	GLfloat rideHeigth = 12;
 	GLfloat wheelRadius = 5;
-	GLfloat wheelWidth = 2;
+	GLfloat wheelWidth = 3;
 	GLfloat suspensionShaftRadius = wheelArmWidth * 1;
 	GLfloat suspensionShaftLenght = wheelArmWidth * 1.3;
-	/*
+	GLfloat bodyColor[3] = { 0.8,0.8,0.8 };
+	GLfloat wheelColor[3] = { 0.74,0.74,0.74 };
+	GLfloat suspensionColor[3] = { 0.5,0.5,0.5 };
+	GLfloat suspensionShaftColor[3] = { 0.4,0.4,0.4 };
+	
 	GLfloat posWLF[3]; // wheel left front 
 	GLfloat posWLC[3];
 	GLfloat posWLB[3];
@@ -41,21 +45,35 @@ public:
 	GLfloat posWSRC[3];
 	GLfloat posWSRB[3];
 
-	Wheel wlf{ pos,wheelRadius,wheelWidth }; //wheel left front
-	Wheel wlc{ pos,wheelRadius,wheelWidth };
-	Wheel wlb{ pos,wheelRadius,wheelWidth };
-	Wheel wrf{ pos,wheelRadius,wheelWidth };
-	Wheel wrc{ pos,wheelRadius,wheelWidth };
-	Wheel wrb{ pos,wheelRadius,wheelWidth };
+	GLfloat posBody[3];
 
-	SuspensionArm  salf{ posBSLF, posWSLF, wheelArmWidth }; //suspension arm left front
-	SuspensionArm  salc{ posBSLB, posWSLC, wheelArmWidth };
-	SuspensionArm  salb{ posBSLB, posWSLB, wheelArmWidth };
-	SuspensionArm  sarf{ posBSRF, posWSRF, wheelArmWidth };
-	SuspensionArm  sarc{ posBSRB, posWSRC, wheelArmWidth };
-	SuspensionArm  sarb{ posBSRB, posWSRB, wheelArmWidth };
+	Wheel wlf{ posWLF,wheelRadius,wheelWidth,wheelColor }; //wheel left front
+	Wheel wlc{ posWLC,wheelRadius,wheelWidth,wheelColor };
+	Wheel wlb{ posWLB,wheelRadius,wheelWidth,wheelColor };
+	Wheel wrf{ posWRF,wheelRadius,wheelWidth,wheelColor };
+	Wheel wrc{ posWRC,wheelRadius,wheelWidth,wheelColor };
+	Wheel wrb{ posWRB,wheelRadius,wheelWidth,wheelColor };
 
-	Box body{ pos,width,length,height }; //body
-	*/
+	SuspensionArm  salf{ posBSLF,posWSLF,wheelArmWidth,suspensionColor }; //suspension arm left front
+	SuspensionArm  salc{ posBSLB,posWSLC,wheelArmWidth,suspensionColor };
+	SuspensionArm  salb{ posBSLB,posWSLB,wheelArmWidth,suspensionColor };
+	SuspensionArm  sarf{ posBSRF,posWSRF,wheelArmWidth,suspensionColor };
+	SuspensionArm  sarc{ posBSRB,posWSRC,wheelArmWidth,suspensionColor };
+	SuspensionArm  sarb{ posBSRB,posWSRB,wheelArmWidth,suspensionColor };
+
+	Wheel wslf{ posWSLF,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor }; //suspension wheel left front
+	Wheel wslc{ posWSLC,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor };
+	Wheel wslb{ posWSLB,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor };
+	Wheel wsrf{ posWSRF,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor };
+	Wheel wsrc{ posWSRC,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor };
+	Wheel wsrb{ posWSRB,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor };
+
+	Wheel bslf{ posBSLF,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor };
+	Wheel bslb{ posBSLB,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor };
+	Wheel bsrf{ posBSRF,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor };
+	Wheel bsrb{ posBSRB,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor };
+
+	Box body{ pos,width,length,height,bodyColor }; //body
+	
 };
 
