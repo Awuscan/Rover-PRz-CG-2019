@@ -1,6 +1,6 @@
 #include "Wheel.h"
 
-Wheel::Wheel(GLfloat point[3], GLfloat r, GLfloat w) : Solid(point), radius(r), width(w)
+Wheel::Wheel(GLfloat point[3], GLfloat r, GLfloat w, GLfloat color[3]) : Solid(point,color), radius(r), width(w)
 {
 }
 
@@ -18,7 +18,7 @@ void Wheel::draw()
 		double x, y, z, alpha;
 		
 		glBegin(GL_TRIANGLE_FAN);
-		glColor3d(0.8, 0.0, 0);
+		glColor3fv(color);
 		glVertex3d(pos[0] - width / 2, pos[1], pos[2]);
 		for (alpha = 0; alpha < 2 * GL_PI; alpha += GL_PI / 16.0)
 		{
@@ -32,7 +32,7 @@ void Wheel::draw()
 		glEnd();
 
 		glBegin(GL_TRIANGLE_STRIP);
-		glColor3d(0.0, 0.8, 0);
+		glColor3fv(colorSec);
 		for (alpha = 0.0; alpha < 2 * GL_PI; alpha += GL_PI / 16.0)
 		{
 			y = radius * sin(alpha);
@@ -47,7 +47,7 @@ void Wheel::draw()
 		glEnd();
 
 		glBegin(GL_TRIANGLE_FAN);
-		glColor3d(0.8, 0.0, 0);
+		glColor3fv(color);
 		glVertex3d(pos[0] + width / 2, pos[1], pos[2]);
 		for (alpha = 0; alpha < 2 * GL_PI; alpha += GL_PI / 16.0)
 		{
@@ -65,4 +65,15 @@ void Wheel::draw()
 	};
 	glPopMatrix();
 
+}
+
+void Wheel::setColor(GLfloat color[3], GLfloat colorSec[3])
+{
+	this->color[0] = color[0];
+	this->color[1] = color[1];
+	this->color[2] = color[2];
+
+	this->colorSec[0] = colorSec[0];
+	this->colorSec[1] = colorSec[1];
+	this->colorSec[2] = colorSec[2];
 }
