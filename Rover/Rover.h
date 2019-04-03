@@ -3,6 +3,7 @@
 #include "Box.h"
 #include "SuspensionArm.h"
 #include "Wheel.h"
+#include "SuspensionShaft.h"
 
 
 class Rover :
@@ -21,7 +22,7 @@ public:
 	GLfloat wheelWidth = 3;
 	GLfloat suspensionShaftRadius = wheelArmWidth * 1;
 	GLfloat suspensionShaftLenght = wheelArmWidth * 1.3;
-	GLfloat bodyColor[3] = { 0.8,0.8,0.8 };
+	GLfloat bodyColor[3] = { 0.5,0.8,0.5 };
 	GLfloat wheelColor[3] = { 0.74,0.74,0.74 };
 	GLfloat suspensionColor[3] = { 0.5,0.5,0.5 };
 	GLfloat suspensionShaftColor[3] = { 0.4,0.4,0.4 };
@@ -61,17 +62,17 @@ public:
 	SuspensionArm  sarc{ posBSRB,posWSRC,wheelArmWidth,suspensionColor };
 	SuspensionArm  sarb{ posBSRB,posWSRB,wheelArmWidth,suspensionColor };
 
-	Wheel wslf{ posWSLF,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor }; //suspension wheel left front
-	Wheel wslc{ posWSLC,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor };
-	Wheel wslb{ posWSLB,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor };
-	Wheel wsrf{ posWSRF,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor };
-	Wheel wsrc{ posWSRC,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor };
-	Wheel wsrb{ posWSRB,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor };
+	SuspensionShaft wslf{ posWSLF,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor }; //suspension wheel left front
+	SuspensionShaft wslc{ posWSLC,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor };
+	SuspensionShaft wslb{ posWSLB,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor };
+	SuspensionShaft wsrf{ posWSRF,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor };
+	SuspensionShaft wsrc{ posWSRC,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor };
+	SuspensionShaft wsrb{ posWSRB,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor };
 
-	Wheel bslf{ posBSLF,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor };
-	Wheel bslb{ posBSLB,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor };
-	Wheel bsrf{ posBSRF,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor };
-	Wheel bsrb{ posBSRB,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor };
+	SuspensionShaft bslf{ posBSLF,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor };
+	SuspensionShaft bslb{ posBSLB,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor };
+	SuspensionShaft bsrf{ posBSRF,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor };
+	SuspensionShaft bsrb{ posBSRB,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor };
 
 	Box body{ pos,width,length,height,bodyColor }; //body
 	

@@ -16,6 +16,4 @@ public:
 	virtual void setColor(GLfloat color[3]);
 	GLfloat pos[3];
 	GLfloat color[3];
-	
 };
-

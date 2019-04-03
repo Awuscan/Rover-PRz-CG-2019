@@ -29,15 +29,15 @@ Rover::Rover(GLfloat pos[3]) : Solid(pos,this->bodyColor)
 	posWRB[2] = wheelRadius / 2 + pos[2];
 
 	posBSLF[0] = -width / 2 - wheelArmWidth / 2 + pos[0];
-	posBSLF[1] = length / 3 + pos[1];
+	posBSLF[1] = length / 4 + pos[1];
 	posBSLF[2] = rideHeigth + height / 2 + pos[2];
 
 	posBSLB[0] = -width / 2 - wheelArmWidth / 2 + pos[0];
-	posBSLB[1] = -length / 4 + pos[1];
+	posBSLB[1] = -length / 4  + pos[1];
 	posBSLB[2] = rideHeigth + height / 2 + pos[2];
 
 	posBSRF[0] = width / 2 + wheelArmWidth / 2 + pos[0];
-	posBSRF[1] = length / 3 + pos[1];
+	posBSRF[1] = length / 4 + pos[1];
 	posBSRF[2] = rideHeigth + height / 2 + pos[2];
 
 	posBSRB[0] = width / 2 + wheelArmWidth / 2 + pos[0];

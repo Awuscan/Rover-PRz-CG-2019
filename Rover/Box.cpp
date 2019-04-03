@@ -81,7 +81,7 @@ void Box::draw()
 			glBegin(GL_TRIANGLE_STRIP);
 			glColor3fv(color);
 
-			for (i = 0; i <= (length / n) + 1; i++)
+			for (i = 0; i <= (length / (float)n) + 1; i++)
 			{
 				glVertex3d(x, y, zdown);
 				glVertex3d(x + n, y, zdown);

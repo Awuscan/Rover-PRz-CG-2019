@@ -119,7 +119,7 @@ void calcNormal(float v[3][3], float out[3])
 // Change viewing volume and viewport.  Called when window is resized
 void ChangeSize(GLsizei w, GLsizei h)
 {
-	GLfloat nRange = 80.0f;
+	GLfloat nRange = 100.0f;
 	GLfloat fAspect;
 	// Prevent a divide by zero
 	if (h == 0)
@@ -182,7 +182,7 @@ void SetupRC()
 	glEnable(GL_COLOR_MATERIAL);
 
 	// Set Material properties to follow glColor values
-	glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+	//glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
 
 	// All materials hereafter have full specular reflectivity
 	// with a high shine
@@ -292,6 +292,7 @@ void RenderScene(void)
 	
 	
 	rover->draw();
+	//gluLookAt(100, 100, 50, 0, 0, 0, 1, 0, 1);
 
 	/////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////
@@ -302,7 +303,6 @@ void RenderScene(void)
 	// Flush drawing commands
 	glFlush();
 }
-
 
 // Select the pixel format for a given device context
 void SetDCPixelFormat(HDC hDC)
@@ -333,8 +333,6 @@ void SetDCPixelFormat(HDC hDC)
 	// Set the pixel format for the device context
 	SetPixelFormat(hDC, nPixelFormat, &pfd);
 }
-
-
 
 // If necessary, creates a 3-3-2 palette for the device context listed.
 HPALETTE GetOpenGLPalette(HDC hDC)
@@ -409,12 +407,8 @@ HPALETTE GetOpenGLPalette(HDC hDC)
 	return hRetPal;
 }
 
-
 // Entry point of all Windows programs
-int APIENTRY WinMain(HINSTANCE       hInst,
-	HINSTANCE       hPrevInstance,
-	LPSTR           lpCmdLine,
-	int                     nCmdShow)
+int APIENTRY WinMain(HINSTANCE hInst, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	MSG                     msg;            // Windows message structure
 	WNDCLASS        wc;                     // Windows class structure
@@ -477,14 +471,8 @@ int APIENTRY WinMain(HINSTANCE       hInst,
 	return msg.wParam;
 }
 
-
-
-
 // Window procedure, handles all messages for this program
-LRESULT CALLBACK WndProc(HWND    hWnd,
-	UINT    message,
-	WPARAM  wParam,
-	LPARAM  lParam)
+LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	static HGLRC hRC;               // Permenant Rendering context
 	static HDC hDC;                 // Private GDI Device context
@@ -668,12 +656,12 @@ LRESULT CALLBACK WndProc(HWND    hWnd,
 			break;
 
 			// Display the about box
-			case ID_HELP_ABOUT:
-				DialogBox (hInstance,
-					MAKEINTRESOURCE(IDD_DIALOG_ABOUT),
-					hWnd,
-					AboutDlgProc);
-				break;
+			//case ID_HELP_ABOUT:
+			//	DialogBox (hInstance,
+			//		MAKEINTRESOURCE(IDD_DIALOG_ABOUT),
+			//		hWnd,
+			//		AboutDlgProc);
+			//	break;
 			
 		}
 	}
@@ -687,9 +675,6 @@ LRESULT CALLBACK WndProc(HWND    hWnd,
 
 	return (0L);
 }
-
-
-
 
 // Dialog procedure.
 BOOL APIENTRY AboutDlgProc(HWND hDlg, UINT message, UINT wParam, LONG lParam)

@@ -116,10 +116,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Box.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Rover.cpp" />
     <ClCompile Include="Solid.cpp" />
     <ClCompile Include="source.cpp" />
     <ClCompile Include="SuspensionArm.cpp" />
+    <ClCompile Include="SuspensionShaft.cpp" />
     <ClCompile Include="Wheel.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -128,9 +130,11 @@
   <ItemGroup>
     <ClInclude Include="..\RESOURCE.H" />
     <ClInclude Include="Box.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Rover.h" />
     <ClInclude Include="Solid.h" />
     <ClInclude Include="SuspensionArm.h" />
+    <ClInclude Include="SuspensionShaft.h" />
     <ClInclude Include="Wheel.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
