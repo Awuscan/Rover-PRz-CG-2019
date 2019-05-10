@@ -3,8 +3,9 @@
 #include <gl\gl.h>              // OpenGL
 #include <gl\glu.h>             // GLU library
 #include <math.h>
+#include <corecrt_math_defines.h>
 
-constexpr auto GL_PI = 3.14;
+constexpr auto GL_PI = M_PI;
 
 class Solid
 {

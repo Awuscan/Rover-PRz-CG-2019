@@ -32,6 +32,10 @@
 #include "Camera.h"
 #include "Rover.h"
 
+#include "Terrain.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 #define glRGB(x, y, z)	glColor3ub((GLubyte)x, (GLubyte)y, (GLubyte)z)
 #define BITMAP_ID 0x4D42		// identyfikator formatu BMP
 
@@ -47,7 +51,6 @@ static GLfloat xRot = 0.0f;
 static GLfloat yRot = 0.0f;
 static GLfloat zRot = 0.0f;
 
-
 static GLsizei lastHeight;
 static GLsizei lastWidth;
 
@@ -55,7 +58,31 @@ static GLsizei lastWidth;
 BITMAPINFOHEADER	bitmapInfoHeader;	// nag³ówek obrazu
 unsigned char*		bitmapData;			// dane tekstury
 unsigned int		texture[2];			// obiekt tekstury
+unsigned int dust = 0;
 
+unsigned int LoadTexture(const char* file, GLenum textureSlot)
+{
+	GLuint texHandle;
+	// Copy file to OpenGL
+	glGenTextures(textureSlot, &texHandle);
+	glBindTexture(GL_TEXTURE_2D, texHandle);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+	int width, height, nrChannels;
+	const auto data = stbi_load(file, &width, &height, &nrChannels, 0);
+	if (data)
+	{
+		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		gluBuild2DMipmaps(GL_TEXTURE_2D, nrChannels, width, height, GL_RGBA, GL_UNSIGNED_BYTE, data);
+	}
+	else
+	{
+		//error
+	}
+	stbi_image_free(data);
+	return texHandle;
+}
 
 // Declaration for Window procedure
 LRESULT CALLBACK WndProc(HWND    hWnd, UINT    message, WPARAM  wParam, LPARAM  lParam);
@@ -147,7 +174,6 @@ void ChangeSize(GLsizei w, GLsizei h)
 	
 	gluPerspective(60.0f,fAspect,1.0,400);
 	
-
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 }
@@ -163,7 +189,6 @@ void SetupRC()
 	GLfloat  specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	GLfloat	 lightPos[] = { 50.0f, 50.0f, 50.0f, 1.0f };
 	GLfloat  specref[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-
 
 	glEnable(GL_DEPTH_TEST);	// Hidden surface removal
 	glFrontFace(GL_CCW);		// Counter clock-wise polygons face out
@@ -189,7 +214,6 @@ void SetupRC()
 	// with a high shine
 	glMaterialfv(GL_FRONT, GL_SPECULAR, specref);
 	glMateriali(GL_FRONT, GL_SHININESS, 64);
-
 
 	// White background
 	glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
@@ -264,10 +288,11 @@ unsigned char *LoadBitmapFile(char *filename, BITMAPINFOHEADER *bitmapInfoHeader
 	return bitmapImage;
 }
 
-
 GLfloat pos[3] = { 0,0,0 };
 auto rover = new Rover{ pos };
 auto camera = new Camera{};
+
+Terrain terrain(dust);
 // Called to draw scene
 void RenderScene(void)
 {
@@ -285,16 +310,9 @@ void RenderScene(void)
 	/////////////////////////////////////////////////////////////////
 	// MIEJSCE NA KOD OPENGL DO TWORZENIA WLASNYCH SCEN:		   //
 	/////////////////////////////////////////////////////////////////
-
-	//Sposób na odróŸnienie "przedniej" i "tylniej" œciany wielok¹ta:
-	//glPolygonMode(GL_BACK,GL_LINE);
-
-	//Uzyskanie siatki:
-	//glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
 	
-	
+
 	rover->draw();
-	//gluLookAt(100, 100, 50, 0, 0, 0, 1, 0, 1);
 
 	/////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////
@@ -517,7 +535,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			free(bitmapData);
 
 		// ³aduje drugi obraz tekstury:
-		bitmapData = LoadBitmapFile((char*)"Bitmapy\\crate.bmp", &bitmapInfoHeader);
+		bitmapData = LoadBitmapFile((char*)"dust.bmp", &bitmapInfoHeader); //"Bitmapy\\crate.bmp"
 		glBindTexture(GL_TEXTURE_2D, texture[1]);       // aktywuje obiekt tekstury
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -532,6 +550,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		if (bitmapData)
 			free(bitmapData);
+
+		dust = LoadTexture("dust.png", 1);
 
 		// ustalenie sposobu mieszania tekstury z t³em
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
@@ -659,13 +679,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			DestroyWindow(hWnd);
 			break;
 
-			// Display the about box
-			//case ID_HELP_ABOUT:
-			//	DialogBox (hInstance,
-			//		MAKEINTRESOURCE(IDD_DIALOG_ABOUT),
-			//		hWnd,
-			//		AboutDlgProc);
-			//	break;
+			//Display the about box
+			case ID_HELP_ABOUT:
+				//DialogBox (hInstance, MAKEINTRESOURCE(IDD_DIALOG_ABOUT), hWnd, AboutDlgProc);
+				break;
 			
 		}
 	}
@@ -708,7 +725,7 @@ BOOL APIENTRY AboutDlgProc(HWND hDlg, UINT message, UINT wParam, LONG lParam)
 		i = 0;
 		do {
 			glError = glGetError();
-			//SetDlgItemText(hDlg,IDC_ERROR1+i,gluErrorString(glError));
+			SetDlgItemText(hDlg,IDC_ERROR1+i,(LPCSTR)gluErrorString(glError));
 			i++;
 		} while (i < 6 && glError != GL_NO_ERROR);
 

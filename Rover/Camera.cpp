@@ -11,38 +11,38 @@ Camera::~Camera()
 void Camera::update(WPARAM wParam)
 {
 	if (wParam == 'W') {
-		this->position[0] += step * sin(rotate);
-		this->position[1] += step * cos(rotate);
-		this->lookAt[0] = this->position[0] + step * sin(rotate);
-		this->lookAt[1] = this->position[1] + step * cos(rotate);
+		this->position[0] += stepMovement * sin(rotate);
+		this->position[1] += stepMovement * cos(rotate);
+		this->lookAt[0] = this->position[0] + stepMovement * sin(rotate);
+		this->lookAt[1] = this->position[1] + stepMovement * cos(rotate);
 	}
 	if (wParam == 'S') {
-		this->position[0] -= step * sin(rotate);
-		this->position[1] -= step * cos(rotate);
+		this->position[0] -= stepMovement * sin(rotate);
+		this->position[1] -= stepMovement * cos(rotate);
 		this->lookAt[0] = this->position[0] + 10 * sin(rotate);
 		this->lookAt[1] = this->position[1] + 10 * cos(rotate);
 	}
 	if (wParam == 'A') {
-		this->position[0] += step * sin(rotate - M_PI / 2);
-		this->position[1] += step * cos(rotate - M_PI / 2);
-		this->lookAt[0] = this->position[0] + step * sin(rotate);
-		this->lookAt[1] = this->position[1] + step * cos(rotate);
+		this->position[0] += stepMovement * sin(rotate - M_PI / 2);
+		this->position[1] += stepMovement * cos(rotate - M_PI / 2);
+		this->lookAt[0] = this->position[0] + stepMovement * sin(rotate);
+		this->lookAt[1] = this->position[1] + stepMovement * cos(rotate);
 	}
 	if (wParam == 'D') {
-		this->position[0] += step * sin(rotate + M_PI / 2);
-		this->position[1] += step * cos(rotate + M_PI / 2);
-		this->lookAt[0] = this->position[0] + step * sin(rotate);
-		this->lookAt[1] = this->position[1] + step * cos(rotate);
+		this->position[0] += stepMovement * sin(rotate + M_PI / 2);
+		this->position[1] += stepMovement * cos(rotate + M_PI / 2);
+		this->lookAt[0] = this->position[0] + stepMovement * sin(rotate);
+		this->lookAt[1] = this->position[1] + stepMovement * cos(rotate);
 	}
 	if (wParam == 'Q') {
-		rotate = rotate - (M_PI / 32.0);
-		this->lookAt[0] = this->position[0] + step * sin(rotate);
-		this->lookAt[1] = this->position[1] + step * cos(rotate);
+		rotate = rotate - stepRotation;
+		this->lookAt[0] = this->position[0] + stepMovement * sin(rotate);
+		this->lookAt[1] = this->position[1] + stepMovement * cos(rotate);
 	}
 	if (wParam == 'E') {
-		rotate = rotate + (M_PI / 32.0);
-		this->lookAt[0] = this->position[0] + step * sin(rotate);
-		this->lookAt[1] = this->position[1] + step * cos(rotate);
+		rotate = rotate + stepRotation;
+		this->lookAt[0] = this->position[0] + stepMovement * sin(rotate);
+		this->lookAt[1] = this->position[1] + stepMovement * cos(rotate);
 	}
 
 	glLoadIdentity();

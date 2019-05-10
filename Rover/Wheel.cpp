@@ -15,7 +15,7 @@ void Wheel::draw()
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	{
-		double x, y, z, alpha;
+		double y, z, alpha;
 		
 		glBegin(GL_TRIANGLE_FAN);
 		glColor3fv(color);
@@ -59,9 +59,6 @@ void Wheel::draw()
 		z = pos[2] + radius * cos(0);
 		glVertex3d(pos[0] + width / 2, y, z);
 		glEnd();
-
-
-
 	};
 	glPopMatrix();
 

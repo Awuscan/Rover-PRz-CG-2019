@@ -18,7 +18,7 @@ void SuspensionShaft::draw()
 
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	{
-		double x, y, z, alpha;
+		double y, z, alpha;
 
 		glBegin(GL_TRIANGLE_FAN);
 		glColor3fv(color);
