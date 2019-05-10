@@ -15,8 +15,7 @@ public:
 private:
 	float step = 10.0;
 	GLfloat position[3] = { 0,0,50 };
-	GLfloat lookAt[3] = { 10,0,50 };
+	GLfloat lookAt[3] = { 0,10,50 };
 	GLfloat up[3] = { 0,0,1 };
 	float rotate = M_PI / 2;
 };
-

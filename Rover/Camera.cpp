@@ -1,7 +1,5 @@
 #include "Camera.h"
 
-
-
 Camera::Camera()
 {
 }
@@ -24,8 +22,8 @@ void Camera::update(WPARAM wParam)
 		this->lookAt[0] = this->position[0] + 10 * sin(rotate);
 		this->lookAt[1] = this->position[1] + 10 * cos(rotate);
 	}
-	if (wParam == 'A') {	
-		this->position[0] += step * sin(rotate - M_PI / 2 );
+	if (wParam == 'A') {
+		this->position[0] += step * sin(rotate - M_PI / 2);
 		this->position[1] += step * cos(rotate - M_PI / 2);
 		this->lookAt[0] = this->position[0] + step * sin(rotate);
 		this->lookAt[1] = this->position[1] + step * cos(rotate);
@@ -40,7 +38,7 @@ void Camera::update(WPARAM wParam)
 		rotate = rotate - (M_PI / 32.0);
 		this->lookAt[0] = this->position[0] + step * sin(rotate);
 		this->lookAt[1] = this->position[1] + step * cos(rotate);
-	}	
+	}
 	if (wParam == 'E') {
 		rotate = rotate + (M_PI / 32.0);
 		this->lookAt[0] = this->position[0] + step * sin(rotate);
