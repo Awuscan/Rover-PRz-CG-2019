@@ -116,7 +116,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Box.cpp" />
-    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Rover.cpp" />
     <ClCompile Include="Solid.cpp" />
     <ClCompile Include="source.cpp" />
@@ -130,7 +129,6 @@
   <ItemGroup>
     <ClInclude Include="..\RESOURCE.H" />
     <ClInclude Include="Box.h" />
-    <ClInclude Include="Camera.h" />
     <ClInclude Include="Rover.h" />
     <ClInclude Include="Solid.h" />
     <ClInclude Include="SuspensionArm.h" />

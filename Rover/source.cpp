@@ -29,7 +29,6 @@
 #include "../resource.h" // About box resource identifiers.
 #include "Solid.h"
 #include "Wheel.h"
-
 #include "Rover.h"
 
 #define glRGB(x, y, z)	glColor3ub((GLubyte)x, (GLubyte)y, (GLubyte)z)
@@ -119,7 +118,7 @@ void calcNormal(float v[3][3], float out[3])
 // Change viewing volume and viewport.  Called when window is resized
 void ChangeSize(GLsizei w, GLsizei h)
 {
-	GLfloat nRange = 100.0f;
+	GLfloat nRange = 600.0f;
 	GLfloat fAspect;
 	// Prevent a divide by zero
 	if (h == 0)
@@ -137,15 +136,16 @@ void ChangeSize(GLsizei w, GLsizei h)
 	glLoadIdentity();
 
 	// Establish clipping volume (left, right, bottom, top, near, far)
-	if (w <= h)
-		glOrtho(-nRange, nRange, -nRange * h / w, nRange*h / w, -nRange, nRange);
-	else
-		glOrtho(-nRange * w / h, nRange*w / h, -nRange, nRange, -nRange, nRange);
+	//if (w <= h)
+	//	glOrtho(-nRange, nRange, -nRange * h / w, nRange*h / w, -nRange, nRange);
+	//else
+	//	glOrtho(-nRange * w / h, nRange*w / h, -nRange, nRange, -nRange, nRange);
 
-	// Establish perspective: 
-	/*
-	gluPerspective(60.0f,fAspect,1.0,400);
-	*/
+
+	//Establish perspective: 
+	
+	gluPerspective(90,fAspect,10.0,400.0);
+	
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -266,6 +266,8 @@ unsigned char *LoadBitmapFile(char *filename, BITMAPINFOHEADER *bitmapInfoHeader
 
 GLfloat pos[3] = { 0,0,0 };
 auto rover = new Rover{ pos };
+GLfloat viewX = 200, viewY = 200, viewZ = 100;
+
 // Called to draw scene
 void RenderScene(void)
 {
@@ -273,7 +275,9 @@ void RenderScene(void)
 
 	// Clear the window with current clearing color
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
 
+	gluLookAt(viewX, viewY, viewZ, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 	// Save the matrix state and do the rotations
 	glPushMatrix();
 	glRotatef(xRot, 1.0f, 0.0f, 0.0f);
@@ -292,13 +296,14 @@ void RenderScene(void)
 	
 	
 	rover->draw();
-	//gluLookAt(100, 100, 50, 0, 0, 0, 1, 0, 1);
 
 	/////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////
 	glPopMatrix();
+
 	glMatrixMode(GL_MODELVIEW);
+	
 
 	// Flush drawing commands
 	glFlush();
@@ -637,6 +642,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		if (wParam == 'E')
 			zRot += 5.0f;
 
+		if (wParam == 'I')
+			viewX -= 5.0f;
+
+		if (wParam == 'K')
+			viewX += 5.0f;
+
+		if (wParam == 'J')
+			viewY -= 5.0f;
+
+		if (wParam == 'L')
+			viewY += 5.0f;
+
+		if (wParam == 'U')
+			viewZ -= 5.0f;
+
+		if (wParam == 'O')
+			viewZ += 5.0f;
+
 		xRot = (const int)xRot % 360;
 		yRot = (const int)yRot % 360;
 		zRot = (const int)zRot % 360;
@@ -655,13 +678,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			DestroyWindow(hWnd);
 			break;
 
-			// Display the about box
-			//case ID_HELP_ABOUT:
-			//	DialogBox (hInstance,
-			//		MAKEINTRESOURCE(IDD_DIALOG_ABOUT),
-			//		hWnd,
-			//		AboutDlgProc);
-			//	break;
+			//Display the about box
+			case ID_HELP_ABOUT:
+				DialogBox (hInstance,
+					MAKEINTRESOURCE(IDD_DIALOG_ABOUT),
+					hWnd,
+					(DLGPROC)AboutDlgProc);
+				break;
 			
 		}
 	}
@@ -704,7 +727,7 @@ BOOL APIENTRY AboutDlgProc(HWND hDlg, UINT message, UINT wParam, LONG lParam)
 		i = 0;
 		do {
 			glError = glGetError();
-			//SetDlgItemText(hDlg,IDC_ERROR1+i,gluErrorString(glError));
+			SetDlgItemText(hDlg,IDC_ERROR1+i, (LPCSTR)gluErrorString(glError));
 			i++;
 		} while (i < 6 && glError != GL_NO_ERROR);
 
