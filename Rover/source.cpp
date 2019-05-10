@@ -30,6 +30,7 @@
 #include "Solid.h"
 #include "Wheel.h"
 #include "Rover.h"
+#include "Camera.h"
 
 #define glRGB(x, y, z)	glColor3ub((GLubyte)x, (GLubyte)y, (GLubyte)z)
 #define BITMAP_ID 0x4D42		// identyfikator formatu BMP
@@ -46,7 +47,6 @@ static GLfloat xRot = 0.0f;
 static GLfloat yRot = 0.0f;
 static GLfloat zRot = 0.0f;
 
-
 static GLsizei lastHeight;
 static GLsizei lastWidth;
 
@@ -54,7 +54,6 @@ static GLsizei lastWidth;
 BITMAPINFOHEADER	bitmapInfoHeader;	// nag³ówek obrazu
 unsigned char*		bitmapData;			// dane tekstury
 unsigned int		texture[2];			// obiekt tekstury
-
 
 // Declaration for Window procedure
 LRESULT CALLBACK WndProc(HWND    hWnd, UINT    message, WPARAM  wParam, LPARAM  lParam);
@@ -136,6 +135,16 @@ void ChangeSize(GLsizei w, GLsizei h)
 	glLoadIdentity();
 
 	// Establish clipping volume (left, right, bottom, top, near, far)
+<<<<<<< HEAD
+	/*if (w <= h)
+		glOrtho(-nRange, nRange, -nRange * h / w, nRange*h / w, -nRange, nRange);
+	else
+		glOrtho(-nRange * w / h, nRange*w / h, -nRange, nRange, -nRange, nRange);
+*/
+	// Establish perspective: 
+	
+	gluPerspective(60.0f,fAspect,1.0,400);
+=======
 	//if (w <= h)
 	//	glOrtho(-nRange, nRange, -nRange * h / w, nRange*h / w, -nRange, nRange);
 	//else
@@ -145,6 +154,7 @@ void ChangeSize(GLsizei w, GLsizei h)
 	//Establish perspective: 
 	
 	gluPerspective(90,fAspect,10.0,400.0);
+>>>>>>> 47812aead4ceee5e63e9f0cea5433048699dbbb8
 	
 
 	glMatrixMode(GL_MODELVIEW);
@@ -266,8 +276,12 @@ unsigned char *LoadBitmapFile(char *filename, BITMAPINFOHEADER *bitmapInfoHeader
 
 GLfloat pos[3] = { 0,0,0 };
 auto rover = new Rover{ pos };
+<<<<<<< HEAD
+auto camera = new Camera{};
+=======
 GLfloat viewX = 200, viewY = 200, viewZ = 100;
 
+>>>>>>> 47812aead4ceee5e63e9f0cea5433048699dbbb8
 // Called to draw scene
 void RenderScene(void)
 {
@@ -624,22 +638,22 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		// Key press, check for arrow keys to do cube rotation.
 	case WM_KEYDOWN:
 	{
-		if (wParam == 'W')
+		if (wParam == 'I')
 			xRot -= 5.0f;
 
-		if (wParam == 'S')
+		if (wParam == 'K')
 			xRot += 5.0f;
 
-		if (wParam == 'A')
+		if (wParam == 'J')
 			yRot -= 5.0f;
 
-		if (wParam == 'D')
+		if (wParam == 'L')
 			yRot += 5.0f;
 
-		if (wParam == 'Q')
+		if (wParam == 'U')
 			zRot -= 5.0f;
 
-		if (wParam == 'E')
+		if (wParam == 'O')
 			zRot += 5.0f;
 
 		if (wParam == 'I')
@@ -663,6 +677,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		xRot = (const int)xRot % 360;
 		yRot = (const int)yRot % 360;
 		zRot = (const int)zRot % 360;
+
+		camera->update(wParam);
 
 		InvalidateRect(hWnd, NULL, FALSE);
 	}
