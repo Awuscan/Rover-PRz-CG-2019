@@ -10,43 +10,70 @@ Camera::~Camera()
 
 void Camera::update(WPARAM wParam)
 {
-	if (wParam == 'W') {
-		this->position[0] += stepMovement * sin(rotate);
-		this->position[1] += stepMovement * cos(rotate);
-		this->lookAt[0] = this->position[0] + stepMovement * sin(rotate);
-		this->lookAt[1] = this->position[1] + stepMovement * cos(rotate);
-	}
-	if (wParam == 'S') {
-		this->position[0] -= stepMovement * sin(rotate);
-		this->position[1] -= stepMovement * cos(rotate);
-		this->lookAt[0] = this->position[0] + 10 * sin(rotate);
-		this->lookAt[1] = this->position[1] + 10 * cos(rotate);
-	}
-	if (wParam == 'A') {
-		this->position[0] += stepMovement * sin(rotate - M_PI / 2);
-		this->position[1] += stepMovement * cos(rotate - M_PI / 2);
-		this->lookAt[0] = this->position[0] + stepMovement * sin(rotate);
-		this->lookAt[1] = this->position[1] + stepMovement * cos(rotate);
-	}
-	if (wParam == 'D') {
-		this->position[0] += stepMovement * sin(rotate + M_PI / 2);
-		this->position[1] += stepMovement * cos(rotate + M_PI / 2);
-		this->lookAt[0] = this->position[0] + stepMovement * sin(rotate);
-		this->lookAt[1] = this->position[1] + stepMovement * cos(rotate);
-	}
-	if (wParam == 'Q') {
-		rotate = rotate - stepRotation;
-		this->lookAt[0] = this->position[0] + stepMovement * sin(rotate);
-		this->lookAt[1] = this->position[1] + stepMovement * cos(rotate);
-	}
-	if (wParam == 'E') {
-		rotate = rotate + stepRotation;
-		this->lookAt[0] = this->position[0] + stepMovement * sin(rotate);
-		this->lookAt[1] = this->position[1] + stepMovement * cos(rotate);
+	switch (wParam) {
+	case 'Z':
+		this->position[2] -= stepMovement;
+		break;
+
+	case 'X':
+		this->position[2] += stepMovement;
+		break;
+
+	case 'W':
+		this->position[0] += stepMovement * sin(yaw) * cos(pitch);
+		this->position[1] += stepMovement * cos(yaw) * cos(pitch);
+		this->position[2] += stepMovement * sin(pitch);
+		break;
+
+	case 'S':
+		this->position[0] -= stepMovement * sin(yaw) * cos(pitch);
+		this->position[1] -= stepMovement * cos(yaw) * cos(pitch);
+		this->position[2] -= stepMovement * sin(pitch);
+		break;
+
+	case VK_UP:
+		pitch += stepRotation;
+		this->lookAt[0] = sin(yaw) * cos(pitch);
+		this->lookAt[1] = cos(yaw) * cos(pitch);
+		this->lookAt[2] = sin(pitch);
+		break;
+
+	case VK_DOWN:
+		pitch -= stepRotation;
+		this->lookAt[0] = sin(yaw) * cos(pitch);
+		this->lookAt[1] = cos(yaw) * cos(pitch);
+		this->lookAt[2] = sin(pitch);
+		break;
+
+	case 'A':
+		this->position[0] += stepMovement * sin(yaw - M_PI / 2);
+		this->position[1] += stepMovement * cos(yaw - M_PI / 2);
+		break;
+
+	case 'D':
+		this->position[0] += stepMovement * sin(yaw + M_PI / 2);
+		this->position[1] += stepMovement * cos(yaw + M_PI / 2);
+		break;
+
+	case VK_LEFT:
+		yaw = yaw - stepRotation;
+		this->lookAt[0] = sin(yaw) * cos(pitch);
+		this->lookAt[1] = cos(yaw) * cos(pitch);
+		this->lookAt[2] = sin(pitch);
+		break;
+
+	case VK_RIGHT:
+		yaw = yaw + stepRotation;
+		this->lookAt[0] =  sin(yaw) * cos(pitch);
+		this->lookAt[1] =  cos(yaw) * cos(pitch);
+		this->lookAt[2] =  (pitch);
+		break;
+	default:
+		break;
 	}
 
 	glLoadIdentity();
-	gluLookAt(this->position[0], this->position[1], this->position[2], this->lookAt[0], this->lookAt[1], this->lookAt[2], this->up[0], this->up[1], this->up[2]);
+	gluLookAt(this->position[0], this->position[1], this->position[2], this->position[0] + this->lookAt[0], this->position[1] + this->lookAt[1], this->position[2] + this->lookAt[2], this->up[0], this->up[1], this->up[2]);
 }
 
 void Camera::setPosition(GLfloat position[3])
@@ -55,4 +82,3 @@ void Camera::setPosition(GLfloat position[3])
 	this->position[1] = position[1];
 	this->position[2] = position[2];
 }
-

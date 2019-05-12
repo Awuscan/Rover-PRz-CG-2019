@@ -31,8 +31,8 @@
 #include "Wheel.h"
 #include "Camera.h"
 #include "Rover.h"
+#include "Object.h"
 
-#include "Terrain.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
@@ -58,7 +58,6 @@ static GLsizei lastWidth;
 BITMAPINFOHEADER	bitmapInfoHeader;	// nag³ówek obrazu
 unsigned char*		bitmapData;			// dane tekstury
 unsigned int		texture[2];			// obiekt tekstury
-unsigned int dust = 0;
 
 unsigned int LoadTexture(const char* file, GLenum textureSlot)
 {
@@ -146,7 +145,7 @@ void calcNormal(float v[3][3], float out[3])
 // Change viewing volume and viewport.  Called when window is resized
 void ChangeSize(GLsizei w, GLsizei h)
 {
-	GLfloat nRange = 100.0f;
+	GLfloat nRange = 400.0f;
 	GLfloat fAspect;
 	// Prevent a divide by zero
 	if (h == 0)
@@ -172,7 +171,7 @@ void ChangeSize(GLsizei w, GLsizei h)
 	*/
 	// Establish perspective: 
 	
-	gluPerspective(60.0f,fAspect,1.0,400);
+	gluPerspective(90.0f,fAspect,10.0, nRange);
 	
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -288,11 +287,13 @@ unsigned char *LoadBitmapFile(char *filename, BITMAPINFOHEADER *bitmapInfoHeader
 	return bitmapImage;
 }
 
+unsigned int dust = LoadTexture("mars.bmp", 1);
 GLfloat pos[3] = { 0,0,0 };
 auto rover = new Rover{ pos };
 auto camera = new Camera{};
+GLfloat rot[] = { 90,1,0,0 };
+auto terrain = new Object{ dust, "mars.obj",pos,rot, 1 };
 
-Terrain terrain(dust);
 // Called to draw scene
 void RenderScene(void)
 {
@@ -311,7 +312,7 @@ void RenderScene(void)
 	// MIEJSCE NA KOD OPENGL DO TWORZENIA WLASNYCH SCEN:		   //
 	/////////////////////////////////////////////////////////////////
 	
-
+	terrain->draw();
 	rover->draw();
 
 	/////////////////////////////////////////////////////////////////
@@ -517,7 +518,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		glGenTextures(2, &texture[0]);                  // tworzy obiekt tekstury			
 
 		// ³aduje pierwszy obraz tekstury:
-		bitmapData = LoadBitmapFile((char*)"Bitmapy\\checker.bmp", &bitmapInfoHeader);
+		bitmapData = LoadBitmapFile((char*)"mars.bmp", &bitmapInfoHeader);
 
 		glBindTexture(GL_TEXTURE_2D, texture[0]);       // aktywuje obiekt tekstury
 
@@ -535,7 +536,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			free(bitmapData);
 
 		// ³aduje drugi obraz tekstury:
-		bitmapData = LoadBitmapFile((char*)"dust.bmp", &bitmapInfoHeader); //"Bitmapy\\crate.bmp"
+		bitmapData = LoadBitmapFile((char*)"dust.png", &bitmapInfoHeader); //"Bitmapy\\crate.bmp"
 		glBindTexture(GL_TEXTURE_2D, texture[1]);       // aktywuje obiekt tekstury
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -550,8 +551,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		if (bitmapData)
 			free(bitmapData);
-
-		dust = LoadTexture("dust.png", 1);
 
 		// ustalenie sposobu mieszania tekstury z t³em
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
