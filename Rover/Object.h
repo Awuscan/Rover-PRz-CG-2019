@@ -8,11 +8,12 @@
 class Object
 {
 public:
-	Object(unsigned int texID, std::string file, GLfloat pos[3], GLfloat rot[4], GLfloat scale);
+	Object(unsigned int texID, std::string file, GLfloat color[3], GLfloat pos[3], GLfloat rot[4], GLfloat scale);
 	~Object();
 	void draw();
 private:
 	GLfloat pos[3];
+	GLfloat color[3];
 	GLfloat rot[4];
 	GLfloat scale;
 	objl::Loader floor;

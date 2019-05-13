@@ -54,10 +54,7 @@ static GLfloat zRot = 0.0f;
 static GLsizei lastHeight;
 static GLsizei lastWidth;
 
-// Opis tekstury
-BITMAPINFOHEADER	bitmapInfoHeader;	// nag³ówek obrazu
-unsigned char*		bitmapData;			// dane tekstury
-unsigned int		texture[2];			// obiekt tekstury
+unsigned int dust = 0;
 
 unsigned int LoadTexture(const char* file, GLenum textureSlot)
 {
@@ -82,6 +79,10 @@ unsigned int LoadTexture(const char* file, GLenum textureSlot)
 	stbi_image_free(data);
 	return texHandle;
 }
+// Opis tekstury
+BITMAPINFOHEADER	bitmapInfoHeader;	// nag³ówek obrazu
+unsigned char*		bitmapData;			// dane tekstury
+unsigned int		texture[2];			// obiekt tekstury
 
 // Declaration for Window procedure
 LRESULT CALLBACK WndProc(HWND    hWnd, UINT    message, WPARAM  wParam, LPARAM  lParam);
@@ -145,7 +146,7 @@ void calcNormal(float v[3][3], float out[3])
 // Change viewing volume and viewport.  Called when window is resized
 void ChangeSize(GLsizei w, GLsizei h)
 {
-	GLfloat nRange = 400.0f;
+	GLfloat nRange = 6000.0f;
 	GLfloat fAspect;
 	// Prevent a divide by zero
 	if (h == 0)
@@ -207,7 +208,7 @@ void SetupRC()
 	glEnable(GL_COLOR_MATERIAL);
 
 	// Set Material properties to follow glColor values
-	//glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
+	glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
 
 	// All materials hereafter have full specular reflectivity
 	// with a high shine
@@ -287,12 +288,19 @@ unsigned char *LoadBitmapFile(char *filename, BITMAPINFOHEADER *bitmapInfoHeader
 	return bitmapImage;
 }
 
-unsigned int dust = LoadTexture("mars.bmp", 1);
 GLfloat pos[3] = { 0,0,0 };
 auto rover = new Rover{ pos };
 auto camera = new Camera{};
 GLfloat rot[] = { 90,1,0,0 };
-auto terrain = new Object{ dust, "mars.obj",pos,rot, 1 };
+GLfloat pos1[3] = { 0,0,-5};
+GLfloat pos2[3] = {0,1000,10};
+GLfloat pos3[3] = { 1000,0,10 };
+GLfloat color1[3] = { 0.9,0.49,0.07 };
+GLfloat color2[3] = { 0.8,0.59,0.07 };
+GLfloat color3[3] = { 0.7,0.49,0.05 };
+auto terrain = new Object{ dust, "mars.obj", color1, pos1, rot, 100 };
+auto cubeStone = new Object{ dust, "cube-stone.obj", color2, pos2, rot, 100 };
+auto sphereStone = new Object{ dust, "sphere-stone.obj", color3, pos3, rot, 100 };
 
 // Called to draw scene
 void RenderScene(void)
@@ -311,8 +319,15 @@ void RenderScene(void)
 	/////////////////////////////////////////////////////////////////
 	// MIEJSCE NA KOD OPENGL DO TWORZENIA WLASNYCH SCEN:		   //
 	/////////////////////////////////////////////////////////////////
-	
+
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, dust);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	terrain->draw();
+	
+	glDisable(GL_TEXTURE_2D);
+	cubeStone->draw();
+	sphereStone->draw();
 	rover->draw();
 
 	/////////////////////////////////////////////////////////////////
@@ -518,7 +533,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		glGenTextures(2, &texture[0]);                  // tworzy obiekt tekstury			
 
 		// ³aduje pierwszy obraz tekstury:
-		bitmapData = LoadBitmapFile((char*)"mars.bmp", &bitmapInfoHeader);
+		bitmapData = LoadBitmapFile((char*)"dust.png", &bitmapInfoHeader);
 
 		glBindTexture(GL_TEXTURE_2D, texture[0]);       // aktywuje obiekt tekstury
 
@@ -536,7 +551,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			free(bitmapData);
 
 		// ³aduje drugi obraz tekstury:
-		bitmapData = LoadBitmapFile((char*)"dust.png", &bitmapInfoHeader); //"Bitmapy\\crate.bmp"
+		bitmapData = LoadBitmapFile((char*)"Bitmapy\\crate.bmp", &bitmapInfoHeader);
 		glBindTexture(GL_TEXTURE_2D, texture[1]);       // aktywuje obiekt tekstury
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -551,6 +566,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		if (bitmapData)
 			free(bitmapData);
+
+		dust = LoadTexture("dust.png", 1);
 
 		// ustalenie sposobu mieszania tekstury z t³em
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
