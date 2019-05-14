@@ -33,6 +33,8 @@ void Camera::update(WPARAM wParam)
 
 	case VK_UP:
 		pitch += stepRotation;
+		if (pitch >= M_PI / 2) 
+			pitch = M_PI / 2;
 		this->lookAt[0] = sin(yaw) * cos(pitch);
 		this->lookAt[1] = cos(yaw) * cos(pitch);
 		this->lookAt[2] = sin(pitch);
@@ -40,6 +42,8 @@ void Camera::update(WPARAM wParam)
 
 	case VK_DOWN:
 		pitch -= stepRotation;
+		if (pitch <= -M_PI / 2) 
+			pitch = -M_PI / 2;
 		this->lookAt[0] = sin(yaw) * cos(pitch);
 		this->lookAt[1] = cos(yaw) * cos(pitch);
 		this->lookAt[2] = sin(pitch);
@@ -56,18 +60,21 @@ void Camera::update(WPARAM wParam)
 		break;
 
 	case VK_LEFT:
-		yaw = yaw - stepRotation;
+		yaw = (yaw - stepRotation);
+		yaw = yaw - round(yaw / (2 * M_PI)) * (2 * M_PI);
 		this->lookAt[0] = sin(yaw) * cos(pitch);
 		this->lookAt[1] = cos(yaw) * cos(pitch);
 		this->lookAt[2] = sin(pitch);
 		break;
 
 	case VK_RIGHT:
-		yaw = yaw + stepRotation;
+		yaw = yaw + stepRotation;		
+		yaw = yaw - round(yaw / (2 * M_PI)) * (2 * M_PI);
 		this->lookAt[0] =  sin(yaw) * cos(pitch);
 		this->lookAt[1] =  cos(yaw) * cos(pitch);
 		this->lookAt[2] =  (pitch);
 		break;
+
 	default:
 		break;
 	}
