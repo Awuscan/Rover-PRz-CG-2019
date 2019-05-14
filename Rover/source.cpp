@@ -43,7 +43,7 @@
 HPALETTE hPalette = NULL;
 
 // Application name and instance storeage
-static LPCTSTR		lpszAppName = "GL Template";
+static LPCTSTR		lpszAppName = "Mars Rover ";
 static HINSTANCE	hInstance;
 
 // Rotation amounts
@@ -295,12 +295,12 @@ GLfloat rot[] = { 90,1,0,0 };
 GLfloat pos1[3] = { 0,0,-5};
 GLfloat pos2[3] = {0,1000,10};
 GLfloat pos3[3] = { 1000,0,10 };
-GLfloat color1[3] = { 0.9,0.49,0.07 };
+GLfloat color1[3] = { 1,1,1 };
 GLfloat color2[3] = { 0.8,0.59,0.07 };
 GLfloat color3[3] = { 0.7,0.49,0.05 };
-auto terrain = new Object{ dust, "mars.obj", color1, pos1, rot, 100 };
-auto cubeStone = new Object{ dust, "cube-stone.obj", color2, pos2, rot, 100 };
-auto sphereStone = new Object{ dust, "sphere-stone.obj", color3, pos3, rot, 100 };
+auto terrain = new Object{ &dust, "mars.obj", color1, pos1, rot, 100 };
+auto cubeStone = new Object{ &dust, "cube-stone.obj", color2, pos2, rot, 100 };
+auto sphereStone = new Object{ &dust, "sphere-stone.obj", color3, pos3, rot, 100 };
 
 // Called to draw scene
 void RenderScene(void)
@@ -533,7 +533,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		glGenTextures(2, &texture[0]);                  // tworzy obiekt tekstury			
 
 		// ³aduje pierwszy obraz tekstury:
-		bitmapData = LoadBitmapFile((char*)"dust.png", &bitmapInfoHeader);
+		bitmapData = LoadBitmapFile((char*)"mars.bmp", &bitmapInfoHeader);
 
 		glBindTexture(GL_TEXTURE_2D, texture[0]);       // aktywuje obiekt tekstury
 
@@ -567,7 +567,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		if (bitmapData)
 			free(bitmapData);
 
-		dust = LoadTexture("dust.png", 1);
+		dust = LoadTexture("dust.bmp", 1);
 
 		// ustalenie sposobu mieszania tekstury z t³em
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
