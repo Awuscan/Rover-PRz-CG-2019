@@ -24,6 +24,7 @@
 #include <windows.h>            // Window defines
 #include <gl\gl.h>              // OpenGL
 #include <gl\glu.h>             // GLU library
+#include < Sysinfoapi.h >        
 #include <math.h>				// Define for sqrt
 #include <stdio.h>
 #include "../resource.h" // About box resource identifiers.
@@ -54,8 +55,6 @@ static GLfloat zRot = 0.0f;
 static GLsizei lastHeight;
 static GLsizei lastWidth;
 
-unsigned int dust = 0;
-
 unsigned int LoadTexture(const char* file, GLenum textureSlot)
 {
 	GLuint texHandle;
@@ -82,7 +81,7 @@ unsigned int LoadTexture(const char* file, GLenum textureSlot)
 // Opis tekstury
 BITMAPINFOHEADER	bitmapInfoHeader;	// nag³ówek obrazu
 unsigned char*		bitmapData;			// dane tekstury
-unsigned int		texture[2];			// obiekt tekstury
+unsigned int		tekstury[3];			// obiekt tekstury
 
 // Declaration for Window procedure
 LRESULT CALLBACK WndProc(HWND    hWnd, UINT    message, WPARAM  wParam, LPARAM  lParam);
@@ -288,6 +287,8 @@ unsigned char *LoadBitmapFile(char *filename, BITMAPINFOHEADER *bitmapInfoHeader
 	return bitmapImage;
 }
 
+
+
 GLfloat pos[3] = { 0,0,0 };
 auto rover = new Rover{ pos };
 auto camera = new Camera{};
@@ -298,13 +299,21 @@ GLfloat pos3[3] = { 1000,0,10 };
 GLfloat color1[3] = { 1,1,1 };
 GLfloat color2[3] = { 0.8,0.59,0.07 };
 GLfloat color3[3] = { 0.7,0.49,0.05 };
-auto terrain = new Object{ &dust, "mars.obj", color1, pos1, rot, 100 };
-auto cubeStone = new Object{ &dust, "cube-stone.obj", color2, pos2, rot, 100 };
-auto sphereStone = new Object{ &dust, "sphere-stone.obj", color3, pos3, rot, 100 };
+auto terrain = new Object{"mars.obj", color1, pos1, rot, 100 };
+auto cubeStone = new Object{"cube-stone.obj", color2, pos2, rot, 100 };
+auto sphereStone = new Object{"sphere-stone.obj", color3, pos3, rot, 100 };
 
+float velL = 0;
+float velR = 0;
+float constVel = 10;
+float momentum = constVel / 10;
+int velUpdate = 0;
+int lastTime = GetTickCount();
 // Called to draw scene
 void RenderScene(void)
 {
+	
+
 	//float normal[3];	// Storeage for calculated surface normal
 
 	// Clear the window with current clearing color
@@ -319,16 +328,46 @@ void RenderScene(void)
 	/////////////////////////////////////////////////////////////////
 	// MIEJSCE NA KOD OPENGL DO TWORZENIA WLASNYCH SCEN:		   //
 	/////////////////////////////////////////////////////////////////
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, tekstury[0]);
+	terrain->draw();
+	glDisable(GL_TEXTURE_2D);
+
 
 	glEnable(GL_TEXTURE_2D);
-	glBindTexture(GL_TEXTURE_2D, dust);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	terrain->draw();
-	
-	glDisable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, tekstury[1]);
 	cubeStone->draw();
 	sphereStone->draw();
+	glDisable(GL_TEXTURE_2D);
+
+	glPushMatrix();
+
+	if (velL < 0)
+	{
+		velL += momentum;
+	}
+	else if (velL > 0)
+	{
+		velL -= momentum;
+	}
+
+	if (velR < 0)
+	{
+		velR += momentum;
+	}
+	else if (velR > 0)
+	{
+		velR -= momentum;
+	}
+
+
+	glTranslatef(0, (velL + velR) / 2, 0); // dodanie wektora do wpsó³rzêdnych
+	//glRotatef(rotAngle * 180 / GL_PI, 0.0f, 0.0f, 1.0f);
+	glTranslatef(pos[0], pos[1], pos[2]);
+	glTranslatef(-pos[0], -pos[1], -pos[2]);
 	rover->draw();
+	glPopMatrix();
 
 	/////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////
@@ -338,6 +377,10 @@ void RenderScene(void)
 
 	// Flush drawing commands
 	glFlush();
+	while (GetTickCount() < lastTime + 100) {
+		Sleep(10);
+	}
+	lastTime = lastTime + 100;
 }
 
 // Select the pixel format for a given device context
@@ -530,44 +573,48 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		hRC = wglCreateContext(hDC);
 		wglMakeCurrent(hDC, hRC);
 		SetupRC();
-		glGenTextures(2, &texture[0]);                  // tworzy obiekt tekstury			
+		//glGenTextures(2, &texture[0]);                  // tworzy obiekt tekstury			
 
-		// ³aduje pierwszy obraz tekstury:
-		bitmapData = LoadBitmapFile((char*)"mars.bmp", &bitmapInfoHeader);
+		tekstury[0] = LoadTexture("textures/mars.png", 1);
+		tekstury[1] = LoadTexture("textures/mars2.png", 1);
+		tekstury[2] = LoadTexture("textures/metal2.png", 1);
 
-		glBindTexture(GL_TEXTURE_2D, texture[0]);       // aktywuje obiekt tekstury
+		//// ³aduje pierwszy obraz tekstury:
+		//bitmapData = LoadBitmapFile((char*)"mars.bmp", &bitmapInfoHeader);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		//glBindTexture(GL_TEXTURE_2D, texture[0]);       // aktywuje obiekt tekstury
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-		// tworzy obraz tekstury
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, bitmapInfoHeader.biWidth,
-			bitmapInfoHeader.biHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, bitmapData);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
-		if (bitmapData)
-			free(bitmapData);
+		//// tworzy obraz tekstury
+		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, bitmapInfoHeader.biWidth,
+		//	bitmapInfoHeader.biHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, bitmapData);
 
-		// ³aduje drugi obraz tekstury:
-		bitmapData = LoadBitmapFile((char*)"Bitmapy\\crate.bmp", &bitmapInfoHeader);
-		glBindTexture(GL_TEXTURE_2D, texture[1]);       // aktywuje obiekt tekstury
+		//if (bitmapData)
+		//	free(bitmapData);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		//// ³aduje drugi obraz tekstury:
+		//bitmapData = LoadBitmapFile((char*)"Bitmapy\\crate.bmp", &bitmapInfoHeader);
+		//glBindTexture(GL_TEXTURE_2D, texture[1]);       // aktywuje obiekt tekstury
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-		// tworzy obraz tekstury
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, bitmapInfoHeader.biWidth,
-			bitmapInfoHeader.biHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, bitmapData);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
-		if (bitmapData)
-			free(bitmapData);
+		//// tworzy obraz tekstury
+		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, bitmapInfoHeader.biWidth,
+		//	bitmapInfoHeader.biHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, bitmapData);
 
-		dust = LoadTexture("dust.bmp", 1);
+		//if (bitmapData)
+		//	free(bitmapData);
+
+		
 
 		// ustalenie sposobu mieszania tekstury z t³em
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
@@ -607,6 +654,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		// Validate the newly painted client area
 		ValidateRect(hWnd, NULL);
+		InvalidateRect(hWnd, NULL, FALSE);
 	}
 	break;
 
@@ -659,23 +707,30 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		camera->update(wParam);
 
-		if (wParam == 'I')
-			xRot -= 5.0f;
+		if (wParam == 'I') {
+			velL += constVel;
+			velR += constVel;
+			velUpdate = 1;
+		}
 
-		if (wParam == 'K')
-			xRot += 5.0f;
 
-		if (wParam == 'J')
-			yRot -= 5.0f;
+		if (wParam == 'K') {
+			velL -= constVel;
+			velR -= constVel;
+			velUpdate = 1;
+		}
 
-		if (wParam == 'L')
-			yRot += 5.0f;
+		if (wParam == 'J') {
+			velL -= constVel;
+			velR += constVel;
+			velUpdate = 1;
+		}
 
-		if (wParam == 'U')
-			zRot -= 5.0f;
-
-		if (wParam == 'O')
-			zRot += 5.0f;
+		if (wParam == 'L') {
+			velL += constVel;
+			velR -= constVel;
+			velUpdate = 1;
+		}
 
 		xRot = (const int)xRot % 360;
 		yRot = (const int)yRot % 360;

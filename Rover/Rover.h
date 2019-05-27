@@ -13,6 +13,11 @@ public:
 	Rover(GLfloat pos[3]);
 	~Rover();
 	void draw();
+	void drawWheels();
+	void drawSusp();
+	void drawBody();
+	void move(GLfloat pos[3]);
+
 	GLfloat width = 20;
 	GLfloat length = 30;
 	GLfloat height = 10;
@@ -75,6 +80,5 @@ public:
 	SuspensionShaft bsrb{ posBSRB,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor };
 
 	Box body{ pos,width,length,height,bodyColor }; //body
-	
 };
 

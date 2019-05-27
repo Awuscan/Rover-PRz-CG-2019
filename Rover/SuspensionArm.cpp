@@ -5,6 +5,7 @@ SuspensionArm::SuspensionArm(GLfloat posBody[3], GLfloat posWheel[3], GLfloat w,
 	this->posWheel[0] = posWheel[0];
 	this->posWheel[1] = posWheel[1];
 	this->posWheel[2] = posWheel[2];
+
 }
 
 SuspensionArm::~SuspensionArm()
@@ -54,7 +55,6 @@ void SuspensionArm::draw()
 		glVertex3fv(p7);
 		glVertex3fv(p8);
 		glEnd();
-
 	};
 }
 
@@ -67,4 +67,3 @@ void SuspensionArm::move(GLfloat posBody[3], GLfloat posWheel[3])
 	this->posWheel[1] = posWheel[1];
 	this->posWheel[2] = posWheel[2];
 }
-
