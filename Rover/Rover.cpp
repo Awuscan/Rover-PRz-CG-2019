@@ -248,3 +248,69 @@ void Rover::move(GLfloat newPos[3])
 
 	body.move(posBody);
 }
+
+void Rover::update(WPARAM wParam)
+{
+	if (wParam == 'I') {
+		velLtarget += constVel;
+		velRtarget += constVel;
+	}
+
+
+	if (wParam == 'K') {
+		velLtarget -= constVel;
+		velRtarget -= constVel;
+	}
+
+	if (wParam == 'J') {
+		velLtarget -= constVel;
+		velRtarget += constVel;
+	}
+
+	if (wParam == 'L') {
+		velLtarget += constVel;
+		velRtarget -= constVel;
+	}
+
+	if (velLtarget < velRtarget)
+	{
+		int x = velRtarget - velLtarget;
+		int z = sqrt(x*x + width * width);
+		int y = x / z;
+		x = asin(y);
+		alfatarget = ( x*M_PI )/180
+	}else if (velLtarget > velRtarget)
+	{
+		velLtarget - velRtarget;
+	}
+	else {
+		alfatarget = 0;
+	}
+}
+
+void Rover::update()
+{
+	if (velL != velLtarget)
+	{
+		if (velLtarget > 0)
+		{
+			velL += (velLtarget - velL) / 2;
+		}
+		if (velLtarget < 0)
+		{
+			velL -= (velL - velLtarget) / 2;
+		}
+	}
+
+	if (velR != velLtarget)
+	{
+		if (velLtarget > 0)
+		{
+			velR += (velRtarget - velR) / 2;
+		}
+		if (velRtarget < 0)
+		{
+			velR -= (velL - velRtarget) / 2;
+		}
+	}	
+}

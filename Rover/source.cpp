@@ -343,23 +343,7 @@ void RenderScene(void)
 
 	glPushMatrix();
 
-	if (velL < 0)
-	{
-		velL += momentum;
-	}
-	else if (velL > 0)
-	{
-		velL -= momentum;
-	}
 
-	if (velR < 0)
-	{
-		velR += momentum;
-	}
-	else if (velR > 0)
-	{
-		velR -= momentum;
-	}
 
 
 	glTranslatef(0, (velL + velR) / 2, 0); // dodanie wektora do wpsó³rzêdnych
@@ -707,30 +691,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		camera->update(wParam);
 
-		if (wParam == 'I') {
-			velL += constVel;
-			velR += constVel;
-			velUpdate = 1;
-		}
-
-
-		if (wParam == 'K') {
-			velL -= constVel;
-			velR -= constVel;
-			velUpdate = 1;
-		}
-
-		if (wParam == 'J') {
-			velL -= constVel;
-			velR += constVel;
-			velUpdate = 1;
-		}
-
-		if (wParam == 'L') {
-			velL += constVel;
-			velR -= constVel;
-			velUpdate = 1;
-		}
+		rover->update(wParam);
 
 		xRot = (const int)xRot % 360;
 		yRot = (const int)yRot % 360;

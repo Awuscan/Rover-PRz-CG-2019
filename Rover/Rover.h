@@ -17,6 +17,8 @@ public:
 	void drawSusp();
 	void drawBody();
 	void move(GLfloat pos[3]);
+	void update(WPARAM wParam);
+	void update();
 
 	GLfloat width = 20;
 	GLfloat length = 30;
@@ -31,6 +33,21 @@ public:
 	GLfloat wheelColor[3] = { 0.74,0.74,0.74 };
 	GLfloat suspensionColor[3] = { 0.5,0.5,0.5 };
 	GLfloat suspensionShaftColor[3] = { 0.4,0.4,0.4 };
+
+	float velL = 0;
+	float velR = 0;
+	float velLtarget = 0;
+	float velRtarget = 0;
+	float alfa = 0;
+	float alfatarget = 0;
+
+	float constVel = 10;
+	float momentum = constVel / 5;
+
+
+
+
+
 	
 	GLfloat posWLF[3]; // wheel left front 
 	GLfloat posWLC[3];
