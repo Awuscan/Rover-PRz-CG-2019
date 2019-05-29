@@ -34,15 +34,15 @@ public:
 	GLfloat suspensionColor[3] = { 0.5,0.5,0.5 };
 	GLfloat suspensionShaftColor[3] = { 0.4,0.4,0.4 };
 
-	float velL = 0;
-	float velR = 0;
-	float velLtarget = 0;
-	float velRtarget = 0;
-	float alfa = 0;
-	float alfatarget = 0;
+	int velL = 0;
+	int velR = 0;
+	int velLtarget = 0;
+	int velRtarget = 0;
+	int alfa = 0;
+	int alfatarget = 0;
 
-	float constVel = 10;
-	float momentum = constVel / 5;
+	int constVel = 5;
+	int momentum = constVel / 5;
 
 
 

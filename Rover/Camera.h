@@ -19,6 +19,6 @@ private:
 	GLfloat position[3] = { 0,0,50 };
 	GLfloat lookAt[3] = { 0,1,0 };
 	GLfloat up[3] = { 0,0,1 };
-	float yaw = M_PI / 2;
+	float yaw = 0;
 	float pitch = 0;
 };

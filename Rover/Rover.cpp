@@ -251,6 +251,22 @@ void Rover::move(GLfloat newPos[3])
 
 void Rover::update(WPARAM wParam)
 {
+	float x, y, z;
+	if (wParam == VK_SPACE)
+	{
+		velLtarget = 0;
+		velRtarget = 0;
+		if (velL > 0)
+		velL = sqrt(velL);
+		if (velR > 0)
+		velR = sqrt(velR);
+
+		if (velL < 0)
+			velL = -sqrt(-velL);
+		if (velR < 0)
+			velR = -sqrt(-velR);
+		
+	}
 	if (wParam == 'I') {
 		velLtarget += constVel;
 		velRtarget += constVel;
@@ -272,45 +288,96 @@ void Rover::update(WPARAM wParam)
 		velRtarget -= constVel;
 	}
 
-	if (velLtarget < velRtarget)
-	{
-		int x = velRtarget - velLtarget;
-		int z = sqrt(x*x + width * width);
-		int y = x / z;
-		x = asin(y);
-		alfatarget = ( x*M_PI )/180
-	}else if (velLtarget > velRtarget)
-	{
-		velLtarget - velRtarget;
-	}
-	else {
-		alfatarget = 0;
-	}
+	//if (velLtarget > velRtarget)
+	//{
+	//	alfa += 1;
+	//}else if (velLtarget > velRtarget)
+	//{
+	//	alfa -= 1;
+	//}
 }
 
 void Rover::update()
 {
+
 	if (velL != velLtarget)
 	{
 		if (velLtarget > 0)
 		{
-			velL += (velLtarget - velL) / 2;
+			if (velL > velLtarget)
+				velL -= momentum;
+			if (velL < velLtarget)
+				velL += momentum;
 		}
 		if (velLtarget < 0)
 		{
-			velL -= (velL - velLtarget) / 2;
+			if (velL > velLtarget)
+				velL -= momentum;
+			if (velL < velLtarget)
+				velL += momentum;
+		}
+		if (velLtarget == 0)
+		{
+			if (velL > 0)
+			{
+				velL -= momentum;
+			}
+			else {
+				velL += momentum;
+			}
 		}
 	}
 
-	if (velR != velLtarget)
+	if (velR != velRtarget)
 	{
-		if (velLtarget > 0)
+		if (velRtarget > 0)
 		{
-			velR += (velRtarget - velR) / 2;
+			if (velR > velRtarget)
+				velR -= momentum;
+			if (velR < velRtarget)
+				velR += momentum;
 		}
 		if (velRtarget < 0)
 		{
-			velR -= (velL - velRtarget) / 2;
+			if (velR > velRtarget)
+				velR -= momentum;
+			if (velR < velRtarget)
+				velR += momentum;
 		}
-	}	
+		if (velRtarget == 0)
+		{
+			if (velR > 0)
+			{
+				velR -= momentum;
+			}
+			else {
+				velR += momentum;
+			}
+		}
+	}
+
+	if(velLtarget != 0 )
+	{
+		if (velLtarget > 0)
+			velLtarget -= momentum;
+		if (velLtarget < 0)
+			velLtarget += momentum;
+	}
+
+	if (velRtarget != 0)
+	{
+		if (velRtarget > 0)
+			velRtarget -= momentum;
+		if (velRtarget < 0)
+			velRtarget += momentum;
+	}
+
+
+
+	GLfloat newPos[3] = {
+		pos[0] += (velL + velR) / 2, //*sin(alfa * 180 / M_PI),
+		pos[1] += (velL + velR) / 2, //*cos(alfa * 180 / M_PI),
+		pos[2] };
+	move(newPos);
+
 }

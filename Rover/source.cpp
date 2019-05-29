@@ -345,11 +345,11 @@ void RenderScene(void)
 
 
 
-
-	glTranslatef(0, (velL + velR) / 2, 0); // dodanie wektora do wpsó³rzêdnych
+	rover->update();
+	//glTranslatef(0, (velL + velR) / 2, 0); // dodanie wektora do wpsó³rzêdnych
 	//glRotatef(rotAngle * 180 / GL_PI, 0.0f, 0.0f, 1.0f);
-	glTranslatef(pos[0], pos[1], pos[2]);
-	glTranslatef(-pos[0], -pos[1], -pos[2]);
+	//glTranslatef(pos[0], pos[1], pos[2]);
+	//glTranslatef(-pos[0], -pos[1], -pos[2]);
 	rover->draw();
 	glPopMatrix();
 
