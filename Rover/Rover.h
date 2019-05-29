@@ -41,12 +41,8 @@ public:
 	int alfa = 0;
 	int alfatarget = 0;
 
-	int constVel = 5;
-	int momentum = constVel / 5;
-
-
-
-
+	int constVel = 10;
+	int momentum = 1;
 
 	
 	GLfloat posWLF[3]; // wheel left front 

@@ -375,7 +375,7 @@ void Rover::update()
 
 
 	GLfloat newPos[3] = {
-		pos[0] += (velL + velR) / 2, //*sin(alfa * 180 / M_PI),
+		pos[0] += 0,//(velL + velR) / 2, //*sin(alfa * 180 / M_PI),
 		pos[1] += (velL + velR) / 2, //*cos(alfa * 180 / M_PI),
 		pos[2] };
 	move(newPos);

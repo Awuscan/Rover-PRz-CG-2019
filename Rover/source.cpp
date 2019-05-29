@@ -44,7 +44,7 @@
 HPALETTE hPalette = NULL;
 
 // Application name and instance storeage
-static LPCTSTR		lpszAppName = "Mars Rover ";
+static LPCTSTR		lpszAppName = "Mars Rover XD";
 static HINSTANCE	hInstance;
 
 // Rotation amounts
@@ -361,10 +361,10 @@ void RenderScene(void)
 
 	// Flush drawing commands
 	glFlush();
-	while (GetTickCount() < lastTime + 100) {
+	while (GetTickCount() < lastTime + 33) {
 		Sleep(10);
 	}
-	lastTime = lastTime + 100;
+	lastTime = lastTime + 33;
 }
 
 // Select the pixel format for a given device context

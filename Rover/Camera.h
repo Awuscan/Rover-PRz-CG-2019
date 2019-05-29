@@ -13,7 +13,7 @@ public:
 	void update(WPARAM wParam);
 	void setPosition(GLfloat position[3]);
 private:
-	float stepMovement = 10.0;
+	float stepMovement = 5.0;
 	float stepRotation = M_PI / 45;
 
 	GLfloat position[3] = { 0,0,50 };
