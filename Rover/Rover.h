@@ -26,6 +26,8 @@ public:
 	GLfloat getPosy() { return pos[1]; }
 	GLfloat getPosz() { return pos[2]; }
 
+	void collision();
+
 private:
 	GLfloat width = 20;
 	GLfloat length = 30;

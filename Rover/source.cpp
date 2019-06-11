@@ -33,7 +33,7 @@
 #include "Camera.h"
 #include "Rover.h"
 #include "Object.h"
-//#include "AntTweakBar.h"
+#include "..\AntTweakBar\include\AntTweakBar.h"
 
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -296,8 +296,8 @@ auto rover = new Rover{ pos };
 auto camera = new Camera{};
 GLfloat rot[] = { 90,1,0,0 };
 GLfloat pos1[3] = { 0,0,-5};
-GLfloat pos2[3] = {0,1000,10};
-GLfloat pos3[3] = { 1000,0,10 };
+GLfloat pos2[3] = {0,800,10};
+GLfloat pos3[3] = { 200,0,10 };
 GLfloat color1[3] = { 1,1,1 };
 GLfloat color2[3] = { 0.8,0.59,0.07 };
 GLfloat color3[3] = { 0.7,0.49,0.05 };
@@ -362,30 +362,38 @@ void RenderScene(void)
 	glPopMatrix();
 	glMatrixMode(GL_MODELVIEW);
 
-/*	TwInit(TW_OPENGL, NULL);
+	TwInit(TW_OPENGL, NULL);
 	TwBar* bar;
 	bar = TwNewBar("Parametry");
 	int vel = rover->getVelocity();
 	int velL = rover->getVelL();
 	int velR = rover->getVelR();
-	int posx = rover->getPosx();
-	int posy = rover->getPosy();
+	float posx = rover->getPosx();
+	float posy = rover->getPosy();
+
+	int collision3 = 0;
 
 
-	TwWindowSize(800, 800);
+	float distance3 = sqrt((posx - pos3[0]) * (posx - pos3[0]) + (posy - pos3[1]) * (posy - pos3[1]));
+	if (distance3 <= 110) {
+		collision3 = 1;
+		rover->collision();
+	}
+
+	TwWindowSize(800, 600);
 	TwAddButton(bar, "Martian rover", NULL, NULL, "");
-	TwAddVarRO(bar, "Velocity", TW_TYPE_FLOAT, &vel, "precision=1");
-	TwAddVarRO(bar, "Velocity L", TW_TYPE_FLOAT, &velL, "precision=1");
-	TwAddVarRO(bar, "Velocity R", TW_TYPE_FLOAT, &velL, "precision=1");
+	TwAddVarRO(bar, "Velocity", TW_TYPE_INT32, &vel, "precision=1");
+	TwAddVarRO(bar, "Velocity L", TW_TYPE_INT32, &velL, "precision=1");
+	TwAddVarRO(bar, "Velocity R", TW_TYPE_INT32, &velL, "precision=1");
 	TwAddSeparator(bar, "Position", "pos");
-	TwAddVarRO(bar, "X", TW_TYPE_FLOAT, &posx, "precision=0");
-	TwAddVarRO(bar, "Y", TW_TYPE_FLOAT, &posy, "precision=0");
+	TwAddVarRO(bar, "X", TW_TYPE_FLOAT, &posx, "precision=1");
+	TwAddVarRO(bar, "Y", TW_TYPE_FLOAT, &posy, "precision=1");
 	TwAddSeparator(bar, NULL, "");
 
 //	TwAddVarRW(bar, "obstacle 1", TW_TYPE_BOOLCPP,"TO DO", "");
 
 	TwDraw();
-*/
+
 	// Flush drawing commands
 	glFlush();
 	while (GetTickCount() < lastTime + 33) {

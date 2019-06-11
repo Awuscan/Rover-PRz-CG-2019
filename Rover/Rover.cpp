@@ -468,3 +468,24 @@ void Rover::update()
 		pos[2] };
 	move(newPos);
 }
+
+void Rover::collision()
+{
+	velL = 0;
+	velR = 0;
+	velLtarget = 0;
+	velRtarget = 0;
+
+	int bounce;
+	if (velocity > 0) {
+		bounce = -2;
+	}
+	else {
+		bounce = 2;
+	}
+	GLfloat newPos[3] = {
+		pos[0] += bounce / 2 * sin(-alfa * M_PI / 180),
+		pos[1] += bounce / 2 * cos(-alfa * M_PI / 180),
+		pos[2]};
+	move(newPos);
+}
