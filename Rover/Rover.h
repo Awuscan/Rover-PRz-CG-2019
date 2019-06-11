@@ -19,7 +19,14 @@ public:
 	void move(GLfloat pos[3]);
 	void update(WPARAM wParam);
 	void update();
+	int getVelocity() { return velocity; }
+	int getVelL() { return velL; }
+	int getVelR() { return velR; }
+	GLfloat getPosx() { return pos[0]; }
+	GLfloat getPosy() { return pos[1]; }
+	GLfloat getPosz() { return pos[2]; }
 
+private:
 	GLfloat width = 20;
 	GLfloat length = 30;
 	GLfloat height = 10;
@@ -38,13 +45,18 @@ public:
 	int velR = 0;
 	int velLtarget = 0;
 	int velRtarget = 0;
+
+	int velocity = 0;
+	int swingRadius = 0;
+
 	int alfa = 0;
 	int alfatarget = 0;
 
-	int constVel = 10;
-	int momentum = 1;
+	int constVel = 5;
 
-	
+	int momentum = 1;
+	int velMax = 20;
+
 	GLfloat posWLF[3]; // wheel left front 
 	GLfloat posWLC[3];
 	GLfloat posWLB[3];
@@ -94,4 +106,3 @@ public:
 
 	Box body{ pos,width,length,height,bodyColor }; //body
 };
-

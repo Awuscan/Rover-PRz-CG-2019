@@ -80,7 +80,9 @@ void Camera::update(WPARAM wParam)
 	}
 
 	glLoadIdentity();
-	gluLookAt(this->position[0], this->position[1], this->position[2], this->position[0] + this->lookAt[0], this->position[1] + this->lookAt[1], this->position[2] + this->lookAt[2], this->up[0], this->up[1], this->up[2]);
+	gluLookAt(this->position[0], this->position[1], this->position[2], 
+		this->position[0] + this->lookAt[0], this->position[1] + this->lookAt[1], this->position[2] + this->lookAt[2], 
+		this->up[0], this->up[1], this->up[2]);
 }
 
 void Camera::setPosition(GLfloat position[3])

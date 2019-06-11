@@ -33,6 +33,8 @@
 #include "Camera.h"
 #include "Rover.h"
 #include "Object.h"
+//#include "AntTweakBar.h"
+
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -312,6 +314,7 @@ int lastTime = GetTickCount();
 // Called to draw scene
 void RenderScene(void)
 {
+
 	
 
 	//float normal[3];	// Storeage for calculated surface normal
@@ -359,12 +362,36 @@ void RenderScene(void)
 	glPopMatrix();
 	glMatrixMode(GL_MODELVIEW);
 
+/*	TwInit(TW_OPENGL, NULL);
+	TwBar* bar;
+	bar = TwNewBar("Parametry");
+	int vel = rover->getVelocity();
+	int velL = rover->getVelL();
+	int velR = rover->getVelR();
+	int posx = rover->getPosx();
+	int posy = rover->getPosy();
+
+
+	TwWindowSize(800, 800);
+	TwAddButton(bar, "Martian rover", NULL, NULL, "");
+	TwAddVarRO(bar, "Velocity", TW_TYPE_FLOAT, &vel, "precision=1");
+	TwAddVarRO(bar, "Velocity L", TW_TYPE_FLOAT, &velL, "precision=1");
+	TwAddVarRO(bar, "Velocity R", TW_TYPE_FLOAT, &velL, "precision=1");
+	TwAddSeparator(bar, "Position", "pos");
+	TwAddVarRO(bar, "X", TW_TYPE_FLOAT, &posx, "precision=0");
+	TwAddVarRO(bar, "Y", TW_TYPE_FLOAT, &posy, "precision=0");
+	TwAddSeparator(bar, NULL, "");
+
+//	TwAddVarRW(bar, "obstacle 1", TW_TYPE_BOOLCPP,"TO DO", "");
+
+	TwDraw();
+*/
 	// Flush drawing commands
 	glFlush();
 	while (GetTickCount() < lastTime + 33) {
 		Sleep(10);
 	}
-	lastTime = lastTime + 33;
+	lastTime = GetTickCount();
 }
 
 // Select the pixel format for a given device context
