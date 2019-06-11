@@ -366,7 +366,6 @@ void Rover::update(WPARAM wParam)
 		alfa -= 1;
 	}
 	alfa = alfa % 360;
-	velocity = (velL + velR) / 2;
 }
 
 void Rover::update()
@@ -452,40 +451,45 @@ void Rover::update()
 			velRtarget += momentum;
 	}
 
-	if (velLtarget > velRtarget)
+	if (velL > velR)
 	{
 		alfa += 1;
 	}
-	else if (velLtarget < velRtarget)
+	else if (velL < velR)
 	{
 		alfa -= 1;
 	}
 	alfa = alfa % 360;
 
+	velocity = (velL + velR) / 2;
+
+
 	GLfloat newPos[3] = {
-		pos[0] += (velL + velR) / 2 *sin(-alfa * M_PI / 180 ),
-		pos[1] += (velL + velR) / 2 *cos(-alfa * M_PI / 180),
+		pos[0] += velocity * sin(-alfa * M_PI / 180 ),
+		pos[1] += velocity * cos(-alfa * M_PI / 180),
 		pos[2] };
 	move(newPos);
 }
 
 void Rover::collision()
 {
+	int bounce;
+	if ((velL + velR) >= 0) {
+		bounce = -1;
+	}
+	else {
+		bounce = 1;
+	}
 	velL = 0;
 	velR = 0;
 	velLtarget = 0;
 	velRtarget = 0;
 
-	int bounce;
-	if (velocity > 0) {
-		bounce = -2;
-	}
-	else {
-		bounce = 2;
-	}
+
+	
 	GLfloat newPos[3] = {
-		pos[0] += bounce / 2 * sin(-alfa * M_PI / 180),
-		pos[1] += bounce / 2 * cos(-alfa * M_PI / 180),
+		pos[0] += bounce * sin(-alfa * M_PI / 180),
+		pos[1] += bounce * cos(-alfa * M_PI / 180),
 		pos[2]};
 	move(newPos);
 }

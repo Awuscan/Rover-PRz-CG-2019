@@ -295,30 +295,21 @@ GLfloat pos[3] = { 0,0,0 };
 auto rover = new Rover{ pos };
 auto camera = new Camera{};
 GLfloat rot[] = { 90,1,0,0 };
-GLfloat pos1[3] = { 0,0,-5};
-GLfloat pos2[3] = {0,800,10};
-GLfloat pos3[3] = { 200,0,10 };
+GLfloat pos[3] = { 0,0,-5};
+GLfloat pos1[3] = {0,800,10};
+GLfloat pos2[3] = { 200,0,10 };
 GLfloat color1[3] = { 1,1,1 };
 GLfloat color2[3] = { 0.8,0.59,0.07 };
 GLfloat color3[3] = { 0.7,0.49,0.05 };
-auto terrain = new Object{"mars.obj", color1, pos1, rot, 100 };
-auto cubeStone = new Object{"cube-stone.obj", color2, pos2, rot, 100 };
-auto sphereStone = new Object{"sphere-stone.obj", color3, pos3, rot, 100 };
+auto terrain = new Object{"mars.obj", color1, pos, rot, 100 };
+auto cubeStone = new Object{"cube-stone.obj", color2, pos1, rot, 100 };
+auto sphereStone = new Object{"sphere-stone.obj", color3, pos2, rot, 100 };
+int collision2 = 0;
 
-float velL = 0;
-float velR = 0;
-float constVel = 10;
-float momentum = constVel / 10;
-int velUpdate = 0;
 int lastTime = GetTickCount();
 // Called to draw scene
 void RenderScene(void)
 {
-
-	
-
-	//float normal[3];	// Storeage for calculated surface normal
-
 	// Clear the window with current clearing color
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -346,8 +337,6 @@ void RenderScene(void)
 
 	glPushMatrix();
 
-
-
 	rover->update();
 	//glTranslatef(0, (velL + velR) / 2, 0); // dodanie wektora do wpsó³rzêdnych
 	//glRotatef(rotAngle * 180 / GL_PI, 0.0f, 0.0f, 1.0f);
@@ -365,32 +354,29 @@ void RenderScene(void)
 	TwInit(TW_OPENGL, NULL);
 	TwBar* bar;
 	bar = TwNewBar("Parametry");
-	int vel = rover->getVelocity();
-	int velL = rover->getVelL();
-	int velR = rover->getVelR();
+
 	float posx = rover->getPosx();
 	float posy = rover->getPosy();
-
-	int collision3 = 0;
-
-
-	float distance3 = sqrt((posx - pos3[0]) * (posx - pos3[0]) + (posy - pos3[1]) * (posy - pos3[1]));
-	if (distance3 <= 110) {
-		collision3 = 1;
+	   	 
+	float distance2 = sqrt((posx - pos2[0]) * (posx - pos2[0]) + (posy - pos2[1]) * (posy - pos2[1]));
+	if (distance2 <= 110) {
+		collision2 = 1;
 		rover->collision();
+	}
+	else {
+		collision2 = 0;
 	}
 
 	TwWindowSize(800, 600);
 	TwAddButton(bar, "Martian rover", NULL, NULL, "");
-	TwAddVarRO(bar, "Velocity", TW_TYPE_INT32, &vel, "precision=1");
-	TwAddVarRO(bar, "Velocity L", TW_TYPE_INT32, &velL, "precision=1");
-	TwAddVarRO(bar, "Velocity R", TW_TYPE_INT32, &velL, "precision=1");
+	TwAddVarRO(bar, "Velocity", TW_TYPE_FLOAT, &rover->velocity, "");
+	TwAddVarRO(bar, "Velocity L", TW_TYPE_INT32, &rover->velL, "");
+	TwAddVarRO(bar, "Velocity R", TW_TYPE_INT32, &rover->velR, "");
 	TwAddSeparator(bar, "Position", "pos");
-	TwAddVarRO(bar, "X", TW_TYPE_FLOAT, &posx, "precision=1");
-	TwAddVarRO(bar, "Y", TW_TYPE_FLOAT, &posy, "precision=1");
+	TwAddVarRO(bar, "X", TW_TYPE_FLOAT, &rover->pos[0], "");
+	TwAddVarRO(bar, "Y", TW_TYPE_FLOAT, &rover->pos[1], "");
 	TwAddSeparator(bar, NULL, "");
-
-//	TwAddVarRW(bar, "obstacle 1", TW_TYPE_BOOLCPP,"TO DO", "");
+	TwAddVarRO(bar, "kolizja z obiektem 2", TW_TYPE_INT32, &collision2, "");
 
 	TwDraw();
 

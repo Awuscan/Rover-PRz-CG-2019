@@ -28,7 +28,7 @@ public:
 
 	void collision();
 
-private:
+
 	GLfloat width = 20;
 	GLfloat length = 30;
 	GLfloat height = 10;
@@ -48,7 +48,7 @@ private:
 	int velLtarget = 0;
 	int velRtarget = 0;
 
-	int velocity = 0;
+	float velocity = 0;
 	int swingRadius = 0;
 
 	int alfa = 0;
