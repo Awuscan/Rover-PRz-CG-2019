@@ -33,7 +33,7 @@
 #include "Camera.h"
 #include "Rover.h"
 #include "Object.h"
-#include "..\AntTweakBar\include\AntTweakBar.h"
+#include "../AntTweakBar/AntTweakBar.h"
 
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -295,13 +295,13 @@ GLfloat pos[3] = { 0,0,0 };
 auto rover = new Rover{ pos };
 auto camera = new Camera{};
 GLfloat rot[] = { 90,1,0,0 };
-GLfloat pos[3] = { 0,0,-5};
+GLfloat pos_terrain[3] = { 0,0,-5};
 GLfloat pos1[3] = {0,800,10};
 GLfloat pos2[3] = { 200,0,10 };
 GLfloat color1[3] = { 1,1,1 };
 GLfloat color2[3] = { 0.8,0.59,0.07 };
 GLfloat color3[3] = { 0.7,0.49,0.05 };
-auto terrain = new Object{"mars.obj", color1, pos, rot, 100 };
+auto terrain = new Object{"mars.obj", color1, pos_terrain, rot, 100 };
 auto cubeStone = new Object{"cube-stone.obj", color2, pos1, rot, 100 };
 auto sphereStone = new Object{"sphere-stone.obj", color3, pos2, rot, 100 };
 int collision2 = 0;
