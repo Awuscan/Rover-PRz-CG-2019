@@ -119,6 +119,8 @@
   <ItemGroup>
     <ClCompile Include="Box.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CheckPoint.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="Rover.cpp" />
     <ClCompile Include="Solid.cpp" />
     <ClCompile Include="source.cpp" />
@@ -134,6 +136,8 @@
     <ClInclude Include="..\RESOURCE.H" />
     <ClInclude Include="Box.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CheckPoint.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="objLoader.h" />
     <ClInclude Include="Rover.h" />
     <ClInclude Include="Solid.h" />

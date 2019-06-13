@@ -1,5 +1,12 @@
 ﻿#include "Rover.h"
 
+void rotate(int angle,GLfloat pos[3]) {
+	
+		glTranslatef(pos[0], pos[1], pos[2]);
+		glRotatef(angle, 0.0f, 0.0f, 1.0f);
+		glTranslatef(-pos[0], -pos[1], -pos[2]);
+}
+
 Rover::Rover(GLfloat pos[3]) : Solid(pos,this->bodyColor)
 {
 	posWLF[0] = -width / 2 - wheelArmWidth - wheelWidth / 2 + pos[0];
@@ -121,17 +128,19 @@ void Rover::draw()
 
 void Rover::drawWheels()
 {
+	int sign = 1;
+	if (velocity < 0) {
+		sign = -1;
+	}
 	glPushMatrix();
 	if (abs(velL) > abs(velR))
 	{
-		glTranslatef(posWLF[0], posWLF[1], posWLF[2]);
-		glRotatef(15, 0.0f, 0.0f, 1.0f);
-		glTranslatef(-posWLF[0], -posWLF[1], -posWLF[2]); 
+		rotate(sign * 15, posWLF);
 	}else if (abs(velR) > abs(velL))
 	{
-		glTranslatef(posWLF[0], posWLF[1], posWLF[2]);
-		glRotatef(-15, 0.0f, 0.0f, 1.0f);
-		glTranslatef(-posWLF[0], -posWLF[1], -posWLF[2]);
+		rotate(sign * -15, posWLF);
+	}else if (velR == -velL && velR != 0) {
+		rotate(-45, posWLF);
 	}
 	wlf.draw();
 	glPopMatrix();
@@ -139,15 +148,14 @@ void Rover::drawWheels()
 	glPushMatrix();
 	if (abs(velL) > abs(velR))
 	{
-		glTranslatef(posWRF[0], posWRF[1], posWRF[2]);
-		glRotatef(15, 0.0f, 0.0f, 1.0f);
-		glTranslatef(-posWRF[0], -posWRF[1], -posWLF[2]);
+		rotate(sign * 15, posWRF);
 	}
 	else if (abs(velR) > abs(velL))
 	{
-		glTranslatef(posWRF[0], posWRF[1], posWRF[2]); 
-		glRotatef(-15, 0.0f, 0.0f, 1.0f);
-		glTranslatef(-posWRF[0], -posWRF[1], -posWRF[2]);
+		rotate(sign * -15, posWRF);
+	}
+	else if (velR == -velL && velR != 0 ) {
+		rotate(45, posWRF);
 	}
 	wrf.draw();
 	glPopMatrix();
@@ -160,15 +168,15 @@ void Rover::drawWheels()
 	glPushMatrix();
 	if (abs(velL) > abs(velR))
 	{
-		glTranslatef(posWLB[0], posWLB[1], posWLB[2]);
-		glRotatef(-15, 0.0f, 0.0f, 1.0f);
-		glTranslatef(-posWLB[0], -posWLB[1], -posWLB[2]); 
+		rotate(sign * -15, posWLB);
+
 	}
 	else if (abs(velR) > abs(velL))
 	{
-		glTranslatef(posWLB[0], posWLB[1], posWLB[2]);
-		glRotatef(15, 0.0f, 0.0f, 1.0f); 
-		glTranslatef(-posWLB[0], -posWLB[1], -posWLB[2]); 
+		rotate(sign * 15, posWLB);
+	}
+	else if (velR == -velL && velR != 0) {
+		rotate(45, posWLB);
 	}
 	wlb.draw();
 	glPopMatrix();
@@ -176,15 +184,14 @@ void Rover::drawWheels()
 	glPushMatrix();
 	if (abs(velL) > abs(velR))
 	{
-		glTranslatef(posWRB[0], posWRB[1], posWRB[2]);
-		glRotatef(-15, 0.0f, 0.0f, 1.0f); 
-		glTranslatef(-posWRB[0], -posWRB[1], -posWRB[2]);
+		rotate(sign * -15, posWRB);
 	}
 	else if (abs(velR) > abs(velL))
 	{
-		glTranslatef(posWRB[0], posWRB[1], posWRB[2]); 
-		glRotatef(15, 0.0f, 0.0f, 1.0f);
-		glTranslatef(-posWRB[0], -posWRB[1], -posWRB[2]); 
+		rotate(sign * 15, posWRB);
+	}
+	else if (velR == -velL && velR != 0) {
+		rotate(-45, posWRB);
 	}
 	wrb.draw();
 	glPopMatrix();
@@ -349,13 +356,13 @@ void Rover::update(WPARAM wParam)
 	}
 
 	if (wParam == 'J') {
-		velLtarget -= constVel;
-		velRtarget += constVel;
+		velLtarget += constVel;
+		velRtarget -= constVel;
 	}
 
 	if (wParam == 'L') {
-		velLtarget += constVel;
-		velRtarget -= constVel;
+		velLtarget -= constVel;
+		velRtarget += constVel;
 	}
 
 	if (velLtarget > velRtarget)
@@ -375,8 +382,8 @@ void Rover::update()
 	{
 		if (velLtarget > 0)
 		{
-			if (velL > velMax)
-				velL = velMax;
+			if (velLtarget > velMax)
+				velLtarget = velMax;
 			if (velL > velLtarget)
 				velL -= momentum;
 			if (velL < velLtarget)
@@ -384,8 +391,8 @@ void Rover::update()
 		}
 		if (velLtarget < 0)
 		{
-			if (velL < -velMax)
-				velL = -velMax;
+			if (velLtarget < -velMax)
+				velLtarget = -velMax;
 			if (velL > velLtarget)
 				velL -= momentum;
 			if (velL < velLtarget)
@@ -407,8 +414,8 @@ void Rover::update()
 	{
 		if (velRtarget > 0)
 		{
-			if (velR > velMax)
-				velR = velMax;
+			if (velRtarget > velMax)
+				velRtarget = velMax;
 			if (velR > velRtarget)
 				velR -= momentum;
 			if (velR < velRtarget)
@@ -416,8 +423,8 @@ void Rover::update()
 		}
 		if (velRtarget < 0)
 		{
-			if (velR < -velMax)
-				velR = -velMax;
+			if (velRtarget < -velMax)
+				velRtarget = -velMax;
 			if (velR > velRtarget)
 				velR -= momentum;
 			if (velR < velRtarget)
@@ -451,11 +458,11 @@ void Rover::update()
 			velRtarget += momentum;
 	}
 
-	if (velL > velR)
+	if (abs(velL) > abs(velR))
 	{
 		alfa += 1;
 	}
-	else if (velL < velR)
+	else if (abs(velL) < abs(velR))
 	{
 		alfa -= 1;
 	}
@@ -478,7 +485,7 @@ void Rover::collision()
 		bounce = -1;
 	}
 	else {
-		bounce = 1;
+		bounce = 5;
 	}
 	velL = 0;
 	velR = 0;

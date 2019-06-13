@@ -8,10 +8,11 @@
 class Camera
 {
 public:
-	Camera();
+	Camera(GLfloat pos[3]);
 	~Camera();
 	void update(WPARAM wParam);
-	void setPosition(GLfloat position[3]);
+	void update();
+	void setPosition(GLfloat position[3], int angle);
 private:
 	float stepMovement = 5.0;
 	float stepRotation = M_PI / 45;

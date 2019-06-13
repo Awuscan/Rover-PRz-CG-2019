@@ -33,7 +33,9 @@
 #include "Camera.h"
 #include "Rover.h"
 #include "Object.h"
+#include "Game.h"
 #include "../AntTweakBar/AntTweakBar.h"
+#include "CheckPoint.h"
 
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -94,55 +96,6 @@ BOOL APIENTRY AboutDlgProc(HWND hDlg, UINT message, UINT wParam, LONG lParam);
 // Set Pixel Format function - forward declaration
 void SetDCPixelFormat(HDC hDC);
 
-// Reduces a normal vector specified as a set of three coordinates,
-// to a unit normal vector of length one.
-void ReduceToUnit(float vector[3])
-{
-	float length;
-
-	// Calculate the length of the vector		
-	length = (float)sqrt((vector[0] * vector[0]) +
-		(vector[1] * vector[1]) +
-		(vector[2] * vector[2]));
-
-	// Keep the program from blowing up by providing an exceptable
-	// value for vectors that may calculated too close to zero.
-	if (length == 0.0f)
-		length = 1.0f;
-
-	// Dividing each element by the length will result in a
-	// unit normal vector.
-	vector[0] /= length;
-	vector[1] /= length;
-	vector[2] /= length;
-}
-
-// Points p1, p2, & p3 specified in counter clock-wise order
-void calcNormal(float v[3][3], float out[3])
-{
-	float v1[3], v2[3];
-	static const int x = 0;
-	static const int y = 1;
-	static const int z = 2;
-
-	// Calculate two vectors from the three points
-	v1[x] = v[0][x] - v[1][x];
-	v1[y] = v[0][y] - v[1][y];
-	v1[z] = v[0][z] - v[1][z];
-
-	v2[x] = v[1][x] - v[2][x];
-	v2[y] = v[1][y] - v[2][y];
-	v2[z] = v[1][z] - v[2][z];
-
-	// Take the cross product of the two vectors to get
-	// the normal vector which will be stored in out
-	out[x] = v1[y] * v2[z] - v1[z] * v2[y];
-	out[y] = v1[z] * v2[x] - v1[x] * v2[z];
-	out[z] = v1[x] * v2[y] - v1[y] * v2[x];
-
-	// Normalize the vector (shorten length to one)
-	ReduceToUnit(out);
-}
 
 // Change viewing volume and viewport.  Called when window is resized
 void ChangeSize(GLsizei w, GLsizei h)
@@ -222,78 +175,9 @@ void SetupRC()
 	glColor3f(0.0, 0.0, 0.0);
 }
 
-// LoadBitmapFile
-// opis: ³aduje mapê bitow¹ z pliku i zwraca jej adres.
-//       Wype³nia strukturê nag³ówka.
-//	 Nie obs³uguje map 8-bitowych.
-unsigned char *LoadBitmapFile(char *filename, BITMAPINFOHEADER *bitmapInfoHeader)
-{
-	FILE *filePtr;							// wskaŸnik pozycji pliku
-	BITMAPFILEHEADER	bitmapFileHeader;		// nag³ówek pliku
-	unsigned char		*bitmapImage;			// dane obrazu
-	int					imageIdx = 0;		// licznik pikseli
-	unsigned char		tempRGB;				// zmienna zamiany sk³adowych
-
-	// otwiera plik w trybie "read binary"
-	filePtr = fopen(filename, "rb");
-	if (filePtr == NULL)
-		return NULL;
-
-	// wczytuje nag³ówek pliku
-	fread(&bitmapFileHeader, sizeof(BITMAPFILEHEADER), 1, filePtr);
-
-	// sprawdza, czy jest to plik formatu BMP
-	if (bitmapFileHeader.bfType != BITMAP_ID)
-	{
-		fclose(filePtr);
-		return NULL;
-	}
-
-	// wczytuje nag³ówek obrazu
-	fread(bitmapInfoHeader, sizeof(BITMAPINFOHEADER), 1, filePtr);
-
-	// ustawia wskaŸnik pozycji pliku na pocz¹tku danych obrazu
-	fseek(filePtr, bitmapFileHeader.bfOffBits, SEEK_SET);
-
-	// przydziela pamiêæ buforowi obrazu
-	bitmapImage = (unsigned char*)malloc(bitmapInfoHeader->biSizeImage);
-
-	// sprawdza, czy uda³o siê przydzieliæ pamiêæ
-	if (!bitmapImage)
-	{
-		free(bitmapImage);
-		fclose(filePtr);
-		return NULL;
-	}
-
-	// wczytuje dane obrazu
-	fread(bitmapImage, 1, bitmapInfoHeader->biSizeImage, filePtr);
-
-	// sprawdza, czy dane zosta³y wczytane
-	if (bitmapImage == NULL)
-	{
-		fclose(filePtr);
-		return NULL;
-	}
-
-	// zamienia miejscami sk³adowe R i B 
-	for (imageIdx = 0; imageIdx < bitmapInfoHeader->biSizeImage; imageIdx += 3)
-	{
-		tempRGB = bitmapImage[imageIdx];
-		bitmapImage[imageIdx] = bitmapImage[imageIdx + 2];
-		bitmapImage[imageIdx + 2] = tempRGB;
-	}
-
-	// zamyka plik i zwraca wskaŸnik bufora zawieraj¹cego wczytany obraz
-	fclose(filePtr);
-	return bitmapImage;
-}
-
-
-
-GLfloat pos[3] = { 0,0,0 };
+GLfloat pos[3] = { 2000,0,0 };
 auto rover = new Rover{ pos };
-auto camera = new Camera{};
+auto camera = new Camera{pos};
 GLfloat rot[] = { 90,1,0,0 };
 GLfloat pos_terrain[3] = { 0,0,-5};
 GLfloat pos1[3] = {0,800,10};
@@ -301,15 +185,36 @@ GLfloat pos2[3] = { 200,0,10 };
 GLfloat color1[3] = { 1,1,1 };
 GLfloat color2[3] = { 0.8,0.59,0.07 };
 GLfloat color3[3] = { 0.7,0.49,0.05 };
-auto terrain = new Object{"mars.obj", color1, pos_terrain, rot, 100 };
+auto terrain = new Object{"planenew.obj", color1, pos_terrain, rot, 100 }; //mars.obj
 auto cubeStone = new Object{"cube-stone.obj", color2, pos1, rot, 100 };
 auto sphereStone = new Object{"sphere-stone.obj", color3, pos2, rot, 100 };
+
+
 int collision2 = 0;
+
+auto game = new Game;
+GLfloat posC1[3] = { 2000,0,0 };
+auto c1 = new CheckPoint{ posC1 };
+
+
+void gameStart() {
+	game->add(posC1);
+	game->start();
+}
 
 int lastTime = GetTickCount();
 // Called to draw scene
 void RenderScene(void)
-{
+{	
+	bool g = false;
+	if (!g) {
+		gameStart();
+		g = true;
+	}
+	else {
+		game->draw();
+	}
+
 	// Clear the window with current clearing color
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -345,6 +250,9 @@ void RenderScene(void)
 	rover->draw();
 	glPopMatrix();
 
+	//c1->draw();
+
+
 	/////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////
 	/////////////////////////////////////////////////////////////////
@@ -366,6 +274,8 @@ void RenderScene(void)
 	else {
 		collision2 = 0;
 	}
+	
+//	game->check(rover->pos);
 
 	TwWindowSize(800, 600);
 	TwAddButton(bar, "Martian rover", NULL, NULL, "");
@@ -380,10 +290,12 @@ void RenderScene(void)
 
 	TwDraw();
 
+	camera->setPosition(rover->pos, -rover->alfa);
+	camera->update();
 	// Flush drawing commands
 	glFlush();
-	while (GetTickCount() < lastTime + 33) {
-		Sleep(10);
+	while (GetTickCount() < lastTime + 16) {
+		Sleep(2);
 	}
 	lastTime = GetTickCount();
 }
