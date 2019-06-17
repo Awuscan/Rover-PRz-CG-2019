@@ -99,5 +99,8 @@
     <Library Include="..\AntTweakBar\lib\AntTweakBar64.lib">
       <Filter>Pliki nagłówkowe</Filter>
     </Library>
+    <Library Include="..\irrKlang\lib\irrKlang.lib">
+      <Filter>Pliki nagłówkowe</Filter>
+    </Library>
   </ItemGroup>
 </Project>

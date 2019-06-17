@@ -149,6 +149,7 @@
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\AntTweakBar\lib\AntTweakBar64.lib" />
+    <Library Include="..\irrKlang\lib\irrKlang.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

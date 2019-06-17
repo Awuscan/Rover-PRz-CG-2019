@@ -193,31 +193,20 @@ auto sphereStone = new Object{"sphere-stone.obj", color3, pos2, rot, 100 };
 int collision2 = 0;
 
 auto game = new Game;
-GLfloat posC1[3] = { 2000,0,0 };
-auto c1 = new CheckPoint{ posC1 };
+GLfloat posC1[3] = { 2000,150,0 };
+GLfloat posC2[3] = { 1000,0,0 };
+GLfloat posC3[3] = { 0,200,0 };
+GLfloat posC4[3] = { -1000,0,0 };
+GLfloat posC5[3] = { -2000,100,0 };
 
-
-void gameStart() {
-	game->add(posC1);
-	game->start();
-}
-
+bool g = false;
 int lastTime = GetTickCount();
 // Called to draw scene
 void RenderScene(void)
 {	
-	bool g = false;
-	if (!g) {
-		gameStart();
-		g = true;
-	}
-	else {
-		game->draw();
-	}
-
 	// Clear the window with current clearing color
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+	
 	// Save the matrix state and do the rotations
 	glPushMatrix();
 	glRotatef(xRot, 1.0f, 0.0f, 0.0f);
@@ -233,24 +222,24 @@ void RenderScene(void)
 	terrain->draw();
 	glDisable(GL_TEXTURE_2D);
 
-
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, tekstury[1]);
 	cubeStone->draw();
 	sphereStone->draw();
 	glDisable(GL_TEXTURE_2D);
-
 	glPushMatrix();
 
 	rover->update();
-	//glTranslatef(0, (velL + velR) / 2, 0); // dodanie wektora do wpsó³rzêdnych
-	//glRotatef(rotAngle * 180 / GL_PI, 0.0f, 0.0f, 1.0f);
-	//glTranslatef(pos[0], pos[1], pos[2]);
-	//glTranslatef(-pos[0], -pos[1], -pos[2]);
+
 	rover->draw();
+
 	glPopMatrix();
 
-	//c1->draw();
+
+	if (g) {
+		game->draw();
+		game->check(rover->getPosx(), rover->getPosy());
+	}
 
 
 	/////////////////////////////////////////////////////////////////
@@ -274,19 +263,17 @@ void RenderScene(void)
 	else {
 		collision2 = 0;
 	}
-	
-//	game->check(rover->pos);
 
 	TwWindowSize(800, 600);
 	TwAddButton(bar, "Martian rover", NULL, NULL, "");
-	TwAddVarRO(bar, "Velocity", TW_TYPE_FLOAT, &rover->velocity, "");
-	TwAddVarRO(bar, "Velocity L", TW_TYPE_INT32, &rover->velL, "");
-	TwAddVarRO(bar, "Velocity R", TW_TYPE_INT32, &rover->velR, "");
-	TwAddSeparator(bar, "Position", "pos");
+	TwAddVarRO(bar, "Predkosc", TW_TYPE_FLOAT, &rover->velocity, "");
+	TwAddSeparator(bar, "Pozycja", "");
 	TwAddVarRO(bar, "X", TW_TYPE_FLOAT, &rover->pos[0], "");
 	TwAddVarRO(bar, "Y", TW_TYPE_FLOAT, &rover->pos[1], "");
 	TwAddSeparator(bar, NULL, "");
-	TwAddVarRO(bar, "kolizja z obiektem 2", TW_TYPE_INT32, &collision2, "");
+	TwAddVarRO(bar, "Kolizja z obiektem 2", TW_TYPE_INT32, &collision2, "");
+	TwAddVarRO(bar, "Wynik", TW_TYPE_INT32, game->getScore() , "");
+	TwAddVarRO(bar, "Czas", TW_TYPE_INT32, game->getTime() , "");
 
 	TwDraw();
 
@@ -622,6 +609,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		// Key press, check for arrow keys to do cube rotation.
 	case WM_KEYDOWN:
 	{
+		if (wParam == VK_F1) {
+			game->start();
+			g = true;
+		}
+		
 		camera->update(wParam);
 
 		rover->update(wParam);

@@ -19,7 +19,8 @@ public:
 	void draw();
 	void setVisibility(int visibility);
 	int getVisibility() { return visibility; }
-	GLfloat* getPos() { return pos; }
+	GLfloat getPosX() { return pos[0]; }
+	GLfloat getPosY() { return pos[1]; }
 	GLfloat getRadius() { return radius; }
 	
 };
