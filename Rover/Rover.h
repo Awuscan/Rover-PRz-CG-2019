@@ -17,15 +17,15 @@ public:
 	void drawSusp();
 	void drawBody();
 	void move(GLfloat pos[3]);
+	void move(GLfloat pos[3], int alfa);
+	void move(GLfloat pos[3], int alfa, int alfaTarget);
+
 	void update(WPARAM wParam);
 	void update();
 	int getVelocity() { return velocity; }
-	int getVelL() { return velL; }
-	int getVelR() { return velR; }
 	GLfloat getPosx() { return pos[0]; }
 	GLfloat getPosy() { return pos[1]; }
 	GLfloat getPosz() { return pos[2]; }
-
 	void collision();
 
 
@@ -43,21 +43,17 @@ public:
 	GLfloat suspensionColor[3] = { 0.5,0.5,0.5 };
 	GLfloat suspensionShaftColor[3] = { 0.4,0.4,0.4 };
 
-	int velL = 0;
-	int velR = 0;
-	int velLtarget = 0;
-	int velRtarget = 0;
-
 	float velocity = 0;
-	int swingRadius = 0;
+	float velocityTarget = 0;
+	//int swingRadius = 0;
 
 	int alfa = 0;
-	int alfatarget = 0;
+	int alfaTarget = 0;
 
-	int constVel = 5;
+	int constVelocity = 5;
 
 	int momentum = 1;
-	int velMax = 20;
+	int velocityMax = 20;
 
 	GLfloat posWLF[3]; // wheel left front 
 	GLfloat posWLC[3];

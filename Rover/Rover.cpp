@@ -133,28 +133,26 @@ void Rover::drawWheels()
 		sign = -1;
 	}
 	glPushMatrix();
-	if (abs(velL) > abs(velR))
+	if (alfa > alfaTarget)
 	{
 		rotate(sign * 15, posWLF);
-	}else if (abs(velR) > abs(velL))
+	}else if (alfa < alfaTarget)
 	{
 		rotate(sign * -15, posWLF);
-	}else if (velR == -velL && velR != 0) {
+	}else if (velocity == 0 && alfa != alfaTarget) {
 		rotate(-45, posWLF);
 	}
 	wlf.draw();
 	glPopMatrix();
 
 	glPushMatrix();
-	if (abs(velL) > abs(velR))
-	{
+	if (alfa > alfaTarget) {
 		rotate(sign * 15, posWRF);
 	}
-	else if (abs(velR) > abs(velL))
-	{
+	else if (alfa < alfaTarget) {
 		rotate(sign * -15, posWRF);
 	}
-	else if (velR == -velL && velR != 0 ) {
+	else if (velocity == 0 && alfa != alfaTarget) {
 		rotate(45, posWRF);
 	}
 	wrf.draw();
@@ -166,32 +164,27 @@ void Rover::drawWheels()
 
 
 	glPushMatrix();
-	if (abs(velL) > abs(velR))
-	{
+	if (alfa > alfaTarget) {
 		rotate(sign * -15, posWLB);
-
 	}
-	else if (abs(velR) > abs(velL))
-	{
+	else if (alfa < alfaTarget) {
 		rotate(sign * 15, posWLB);
 	}
-	else if (velR == -velL && velR != 0) {
-		rotate(45, posWLB);
+	else if (velocity == 0 && alfa != alfaTarget) {
+		rotate(-45, posWLB);
 	}
 	wlb.draw();
 	glPopMatrix();
 
 	glPushMatrix();
-	if (abs(velL) > abs(velR))
-	{
+	if (alfa > alfaTarget) {
 		rotate(sign * -15, posWRB);
 	}
-	else if (abs(velR) > abs(velL))
-	{
+	else if (alfa < alfaTarget) {
 		rotate(sign * 15, posWRB);
 	}
-	else if (velR == -velL && velR != 0) {
-		rotate(-45, posWRB);
+	else if (velocity == 0 && alfa != alfaTarget) {
+		rotate(45, posWRB);
 	}
 	wrb.draw();
 	glPopMatrix();
@@ -326,150 +319,92 @@ void Rover::move(GLfloat newPos[3])
 	body.move(posBody);
 }
 
+void Rover::move(GLfloat pos[3], int alfa)
+{
+	move(pos);
+	this->alfa = alfa;
+}
+
+void Rover::move(GLfloat pos[3], int alfa, int alfaTarget)
+{
+	move(pos);
+	this->alfa = alfa;
+	this->alfaTarget = alfaTarget;
+}
+
 void Rover::update(WPARAM wParam)
 {
-	float x, y, z;
 	if (wParam == VK_SPACE)
 	{
-		velLtarget = 0;
-		velRtarget = 0;
-		if (velL > 0)
-		velL = sqrt(velL);
-		if (velR > 0)
-		velR = sqrt(velR);
-
-		if (velL < 0)
-			velL = -sqrt(-velL);
-		if (velR < 0)
-			velR = -sqrt(-velR);
-		
-	}
-	if (wParam == 'I') {
-		velLtarget += constVel;
-		velRtarget += constVel;
+		velocityTarget = 0;	
+		alfaTarget = alfa;
 	}
 
+	if (wParam == 'I')
+		velocity += constVelocity;
 
-	if (wParam == 'K') {
-		velLtarget -= constVel;
-		velRtarget -= constVel;
-	}
+	if (wParam == 'K')
+		velocity -= constVelocity;
 
-	if (wParam == 'J') {
-		velLtarget += constVel;
-		velRtarget -= constVel;
-	}
+	if (wParam == 'J')
+		alfaTarget += 10;
 
-	if (wParam == 'L') {
-		velLtarget -= constVel;
-		velRtarget += constVel;
-	}
-
-	if (velLtarget > velRtarget)
-	{
-		alfa += 1;
-	}else if (velLtarget < velRtarget)
-	{
-		alfa -= 1;
-	}
-	alfa = alfa % 360;
+	if (wParam == 'L')
+		alfaTarget -= 10;
 }
 
 void Rover::update()
 {
 
-	if (velL != velLtarget)
+	if (velocity != velocityTarget)
 	{
-		if (velLtarget > 0)
+		if (velocityTarget > 0)
 		{
-			if (velLtarget > velMax)
-				velLtarget = velMax;
-			if (velL > velLtarget)
-				velL -= momentum;
-			if (velL < velLtarget)
-				velL += momentum;
+			if (velocityTarget > velocityMax)
+				velocityTarget = velocityMax;
+			if (velocity > velocityTarget)
+				velocity -= momentum;
+			if (velocity < velocityTarget)
+				velocity += momentum;
 		}
-		if (velLtarget < 0)
+		if (velocityTarget < 0)
 		{
-			if (velLtarget < -velMax)
-				velLtarget = -velMax;
-			if (velL > velLtarget)
-				velL -= momentum;
-			if (velL < velLtarget)
-				velL += momentum;
+			if (velocityTarget < -velocityMax)
+				velocityTarget = -velocityMax;
+			if (velocity > velocityTarget)
+				velocity -= momentum;
+			if (velocity < velocityTarget)
+				velocity += momentum;
 		}
-		if (velLtarget == 0)
+		if (velocityTarget == 0)
 		{
-			if (velL > 0)
+			if (velocity > 0)
 			{
-				velL -= momentum;
+				velocity -= momentum;
 			}
 			else {
-				velL += momentum;
+				velocity += momentum;
 			}
 		}
 	}
 
-	if (velR != velRtarget)
+	if(velocityTarget != 0 )
 	{
-		if (velRtarget > 0)
-		{
-			if (velRtarget > velMax)
-				velRtarget = velMax;
-			if (velR > velRtarget)
-				velR -= momentum;
-			if (velR < velRtarget)
-				velR += momentum;
-		}
-		if (velRtarget < 0)
-		{
-			if (velRtarget < -velMax)
-				velRtarget = -velMax;
-			if (velR > velRtarget)
-				velR -= momentum;
-			if (velR < velRtarget)
-				velR += momentum;
-		}
-		if (velRtarget == 0)
-		{
-			if (velR > 0)
-			{
-				velR -= momentum;
-			}
-			else {
-				velR += momentum;
-			}
-		}
+		if (velocityTarget > 0)
+			velocityTarget -= momentum;
+		if (velocityTarget < 0)
+			velocityTarget += momentum;
 	}
 
-	if(velLtarget != 0 )
+	if (alfa > alfaTarget)
 	{
-		if (velLtarget > 0)
-			velLtarget -= momentum;
-		if (velLtarget < 0)
-			velLtarget += momentum;
+		alfa -= 2;
 	}
-
-	if (velRtarget != 0)
+	else if (alfa < alfaTarget)
 	{
-		if (velRtarget > 0)
-			velRtarget -= momentum;
-		if (velRtarget < 0)
-			velRtarget += momentum;
-	}
-
-	if (abs(velL) > abs(velR))
-	{
-		alfa += 1;
-	}
-	else if (abs(velL) < abs(velR))
-	{
-		alfa -= 1;
+		alfa += 2;
 	}
 	alfa = alfa % 360;
-
-	velocity = (velL + velR) / 2;
-
 
 	GLfloat newPos[3] = {
 		pos[0] += velocity * sin(-alfa * M_PI / 180 ),
@@ -481,18 +416,14 @@ void Rover::update()
 void Rover::collision()
 {
 	int bounce;
-	if ((velL + velR) >= 0) {
+	if (velocityTarget >= 0) {
 		bounce = -1;
 	}
 	else {
 		bounce = 5;
 	}
-	velL = 0;
-	velR = 0;
-	velLtarget = 0;
-	velRtarget = 0;
-
-
+	velocity = 0;
+	velocityTarget = 0;
 	
 	GLfloat newPos[3] = {
 		pos[0] += bounce * sin(-alfa * M_PI / 180),
@@ -500,3 +431,4 @@ void Rover::collision()
 		pos[2]};
 	move(newPos);
 }
+

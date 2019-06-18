@@ -177,7 +177,10 @@ void SetupRC()
 
 GLfloat pos[3] = { 2000,0,0 };
 auto rover = new Rover{ pos };
-auto camera = new Camera{pos};
+int cameraSelect = 1;
+auto camera = new Camera{pos,true};
+auto camera2 = new Camera{ pos,false };
+
 GLfloat rot[] = { 90,1,0,0 };
 GLfloat pos_terrain[3] = { 0,0,-5};
 GLfloat pos1[3] = {0,800,10};
@@ -266,7 +269,7 @@ void RenderScene(void)
 
 	TwWindowSize(800, 600);
 	TwAddButton(bar, "Martian rover", NULL, NULL, "");
-	TwAddVarRO(bar, "Predkosc", TW_TYPE_FLOAT, &rover->velocity, "");
+	//TwAddVarRO(bar, "Predkosc", TW_TYPE_FLOAT, &rover->velocity, "");
 	TwAddSeparator(bar, "Pozycja", "");
 	TwAddVarRO(bar, "X", TW_TYPE_FLOAT, &rover->pos[0], "");
 	TwAddVarRO(bar, "Y", TW_TYPE_FLOAT, &rover->pos[1], "");
@@ -278,7 +281,14 @@ void RenderScene(void)
 	TwDraw();
 
 	camera->setPosition(rover->pos, -rover->alfa);
-	camera->update();
+	switch (cameraSelect) {
+	case 1:
+		camera->update();
+		break;
+	case 2:
+		camera2->update();
+		break;
+	}
 	// Flush drawing commands
 	glFlush();
 	while (GetTickCount() < lastTime + 16) {
@@ -609,18 +619,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		// Key press, check for arrow keys to do cube rotation.
 	case WM_KEYDOWN:
 	{
-		if (wParam == VK_F1) {
+		if (wParam == VK_F5) {
 			game->start();
 			g = true;
+			rover->move(pos,0,0);
 		}
-		
-		camera->update(wParam);
+		if (wParam == VK_F1) 
+			cameraSelect = 1;
+		if (wParam == VK_F2)
+			cameraSelect = 2;
+
+		switch (cameraSelect) {
+		case 1:
+			camera->update(wParam);
+			break;
+		case 2:
+			camera2->update(wParam);
+			break;
+		}
 
 		rover->update(wParam);
-
-		xRot = (const int)xRot % 360;
-		yRot = (const int)yRot % 360;
-		zRot = (const int)zRot % 360;
 
 		InvalidateRect(hWnd, NULL, FALSE);
 	}

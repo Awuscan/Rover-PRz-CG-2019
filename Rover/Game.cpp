@@ -36,7 +36,6 @@ void Game::check(GLfloat posx, GLfloat posy)
 						engine->play2D("success.mp3", false);
 					}
 				}
-					
 				it->setVisibility(0);
 			}
 		}
@@ -50,5 +49,5 @@ void Game::start()
 	for (std::vector<CheckPoint>::iterator it = checkPoints.begin(); it != checkPoints.end(); ++it) {
 			it->setVisibility(1);
 	}
-	engine->play2D("start.mp3", false);
+	engine->play2D("start2.mp3", false);
 }

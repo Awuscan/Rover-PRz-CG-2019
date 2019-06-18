@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-Camera::Camera(GLfloat pos[3])
+Camera::Camera(GLfloat pos[3], bool rover): rover(rover)
 {
 	position[0] = pos[0];
 	position[1] = pos[1];
@@ -15,28 +15,68 @@ void Camera::update(WPARAM wParam)
 {
 	switch (wParam) {
 	case 'Z':
+		if(!rover)
 		this->position[2] -= stepMovement;
 		break;
 
 	case 'X':
+		if (!rover)
 		this->position[2] += stepMovement;
 		break;
 
 	case 'W':
-		this->position[0] += stepMovement * sin(yaw) * cos(pitch);
-		this->position[1] += stepMovement * cos(yaw) * cos(pitch);
-		this->position[2] += stepMovement * sin(pitch);
+		if (!rover) {
+			this->position[0] += stepMovement * sin(yaw) * cos(pitch);
+			this->position[1] += stepMovement * cos(yaw) * cos(pitch);
+			this->position[2] += stepMovement * sin(pitch);
+		}
 		break;
 
 	case 'S':
-		this->position[0] -= stepMovement * sin(yaw) * cos(pitch);
-		this->position[1] -= stepMovement * cos(yaw) * cos(pitch);
-		this->position[2] -= stepMovement * sin(pitch);
+		if (!rover) {
+			this->position[0] -= stepMovement * sin(yaw) * cos(pitch);
+			this->position[1] -= stepMovement * cos(yaw) * cos(pitch);
+			this->position[2] -= stepMovement * sin(pitch);
+		}
 		break;
 
+	case 'A':
+		if (!rover) {
+			this->position[0] += stepMovement * sin(yaw - M_PI / 2);
+			this->position[1] += stepMovement * cos(yaw - M_PI / 2);
+		}
+		break;
+
+	case 'D':
+		if (!rover) {
+			this->position[0] += stepMovement * sin(yaw + M_PI / 2);
+			this->position[1] += stepMovement * cos(yaw + M_PI / 2);
+		}
+		break;
+
+	case VK_LEFT:
+		if (!rover) {
+			yaw = (yaw - stepRotation);
+			yaw = yaw - round(yaw / (2 * M_PI)) * (2 * M_PI);
+			this->lookAt[0] = sin(yaw) * cos(pitch);
+			this->lookAt[1] = cos(yaw) * cos(pitch);
+			this->lookAt[2] = sin(pitch);
+		}
+		break;
+
+	case VK_RIGHT:
+		if (!rover) {
+			yaw = yaw + stepRotation;
+			yaw = yaw - round(yaw / (2 * M_PI)) * (2 * M_PI);
+			this->lookAt[0] = sin(yaw) * cos(pitch);
+			this->lookAt[1] = cos(yaw) * cos(pitch);
+			this->lookAt[2] = (pitch);
+		}
+		break;
+	
 	case VK_UP:
 		pitch += stepRotation;
-		if (pitch >= M_PI / 2) 
+		if (pitch >= M_PI / 2)
 			pitch = M_PI / 2;
 		this->lookAt[0] = sin(yaw) * cos(pitch);
 		this->lookAt[1] = cos(yaw) * cos(pitch);
@@ -45,37 +85,11 @@ void Camera::update(WPARAM wParam)
 
 	case VK_DOWN:
 		pitch -= stepRotation;
-		if (pitch <= -M_PI / 2) 
+		if (pitch <= -M_PI / 2)
 			pitch = -M_PI / 2;
 		this->lookAt[0] = sin(yaw) * cos(pitch);
 		this->lookAt[1] = cos(yaw) * cos(pitch);
 		this->lookAt[2] = sin(pitch);
-		break;
-
-	case 'A':
-		this->position[0] += stepMovement * sin(yaw - M_PI / 2);
-		this->position[1] += stepMovement * cos(yaw - M_PI / 2);
-		break;
-
-	case 'D':
-		this->position[0] += stepMovement * sin(yaw + M_PI / 2);
-		this->position[1] += stepMovement * cos(yaw + M_PI / 2);
-		break;
-
-	case VK_LEFT:
-		yaw = (yaw - stepRotation);
-		yaw = yaw - round(yaw / (2 * M_PI)) * (2 * M_PI);
-		this->lookAt[0] = sin(yaw) * cos(pitch);
-		this->lookAt[1] = cos(yaw) * cos(pitch);
-		this->lookAt[2] = sin(pitch);
-		break;
-
-	case VK_RIGHT:
-		yaw = yaw + stepRotation;		
-		yaw = yaw - round(yaw / (2 * M_PI)) * (2 * M_PI);
-		this->lookAt[0] =  sin(yaw) * cos(pitch);
-		this->lookAt[1] =  cos(yaw) * cos(pitch);
-		this->lookAt[2] =  (pitch);
 		break;
 
 	default:
