@@ -53,7 +53,7 @@ public:
 	int constVelocity = 5;
 
 	int momentum = 1;
-	int velocityMax = 20;
+	int velocityMax = 15;
 
 	GLfloat posWLF[3]; // wheel left front 
 	GLfloat posWLC[3];

@@ -486,49 +486,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		// Create the rendering context and make it current
 		hRC = wglCreateContext(hDC);
 		wglMakeCurrent(hDC, hRC);
-		SetupRC();
-		//glGenTextures(2, &texture[0]);                  // tworzy obiekt tekstury			
+		SetupRC();	
 
 		tekstury[0] = LoadTexture("textures/mars.png", 1);
 		tekstury[1] = LoadTexture("textures/mars2.png", 1);
 		tekstury[2] = LoadTexture("textures/metal2.png", 1);
-
-		//// ³aduje pierwszy obraz tekstury:
-		//bitmapData = LoadBitmapFile((char*)"mars.bmp", &bitmapInfoHeader);
-
-		//glBindTexture(GL_TEXTURE_2D, texture[0]);       // aktywuje obiekt tekstury
-
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-
-		//// tworzy obraz tekstury
-		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, bitmapInfoHeader.biWidth,
-		//	bitmapInfoHeader.biHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, bitmapData);
-
-		//if (bitmapData)
-		//	free(bitmapData);
-
-		//// ³aduje drugi obraz tekstury:
-		//bitmapData = LoadBitmapFile((char*)"Bitmapy\\crate.bmp", &bitmapInfoHeader);
-		//glBindTexture(GL_TEXTURE_2D, texture[1]);       // aktywuje obiekt tekstury
-
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-
-		//// tworzy obraz tekstury
-		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, bitmapInfoHeader.biWidth,
-		//	bitmapInfoHeader.biHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, bitmapData);
-
-		//if (bitmapData)
-		//	free(bitmapData);
-
-		
 
 		// ustalenie sposobu mieszania tekstury z t³em
 		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);

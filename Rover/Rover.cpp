@@ -128,15 +128,15 @@ void Rover::draw()
 
 void Rover::drawWheels()
 {
-	int sign = 1;
+	int sign = -1;
 	if (velocity < 0) {
-		sign = -1;
+		sign = 1;
 	}
 	glPushMatrix();
-	if (alfa > alfaTarget)
+	if (alfa > alfaTarget && velocity != 0)
 	{
 		rotate(sign * 15, posWLF);
-	}else if (alfa < alfaTarget)
+	}else if (alfa < alfaTarget && velocity != 0)
 	{
 		rotate(sign * -15, posWLF);
 	}else if (velocity == 0 && alfa != alfaTarget) {
@@ -146,10 +146,10 @@ void Rover::drawWheels()
 	glPopMatrix();
 
 	glPushMatrix();
-	if (alfa > alfaTarget) {
+	if (alfa > alfaTarget && velocity != 0) {
 		rotate(sign * 15, posWRF);
 	}
-	else if (alfa < alfaTarget) {
+	else if (alfa < alfaTarget && velocity != 0) {
 		rotate(sign * -15, posWRF);
 	}
 	else if (velocity == 0 && alfa != alfaTarget) {
@@ -164,10 +164,10 @@ void Rover::drawWheels()
 
 
 	glPushMatrix();
-	if (alfa > alfaTarget) {
+	if (alfa > alfaTarget && velocity != 0) {
 		rotate(sign * -15, posWLB);
 	}
-	else if (alfa < alfaTarget) {
+	else if (alfa < alfaTarget && velocity != 0) {
 		rotate(sign * 15, posWLB);
 	}
 	else if (velocity == 0 && alfa != alfaTarget) {
@@ -177,10 +177,10 @@ void Rover::drawWheels()
 	glPopMatrix();
 
 	glPushMatrix();
-	if (alfa > alfaTarget) {
+	if (alfa > alfaTarget && velocity != 0) {
 		rotate(sign * -15, posWRB);
 	}
-	else if (alfa < alfaTarget) {
+	else if (alfa < alfaTarget && velocity != 0) {
 		rotate(sign * 15, posWRB);
 	}
 	else if (velocity == 0 && alfa != alfaTarget) {
@@ -431,4 +431,3 @@ void Rover::collision()
 		pos[2]};
 	move(newPos);
 }
-
