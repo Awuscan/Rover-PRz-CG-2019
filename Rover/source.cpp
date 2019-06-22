@@ -251,9 +251,7 @@ void RenderScene(void)
 	glPopMatrix();
 	glMatrixMode(GL_MODELVIEW);
 
-	TwInit(TW_OPENGL, NULL);
-	TwBar* bar;
-	bar = TwNewBar("Parametry");
+	
 
 	float posx = rover->getPosx();
 	float posy = rover->getPosy();
@@ -267,20 +265,26 @@ void RenderScene(void)
 		collision2 = 0;
 	}
 
-	TwWindowSize(800, 600);
+	TwInit(TW_OPENGL, NULL);
+	TwBar* bar;
+	bar = TwNewBar("Parametry");
+
+	TwWindowSize(lastWidth, lastHeight);
+	TwDefine("Parametry size='240 200' ");
 	TwAddButton(bar, "Martian rover", NULL, NULL, "");
-	//TwAddVarRO(bar, "Predkosc", TW_TYPE_FLOAT, &rover->velocity, "");
-	TwAddSeparator(bar, "Pozycja", "");
+	TwAddSeparator(bar, NULL, "");
+	TwAddVarRO(bar, "Predkosc", TW_TYPE_INT32, rover->getVelocity(), "");
+	TwAddSeparator(bar, NULL, "");
 	TwAddVarRO(bar, "X", TW_TYPE_FLOAT, &rover->pos[0], "");
 	TwAddVarRO(bar, "Y", TW_TYPE_FLOAT, &rover->pos[1], "");
 	TwAddSeparator(bar, NULL, "");
-	TwAddVarRO(bar, "Kolizja z obiektem 2", TW_TYPE_INT32, &collision2, "");
+	TwAddVarRO(bar, "Kolizja ", TW_TYPE_INT32, &collision2, "");
 	TwAddVarRO(bar, "Wynik", TW_TYPE_INT32, game->getScore() , "");
 	TwAddVarRO(bar, "Czas", TW_TYPE_INT32, game->getTime() , "");
 
 	TwDraw();
 
-	camera->setPosition(rover->pos, -rover->alfa);
+	camera->setPosition(rover->pos, -rover->getAlfa());
 	switch (cameraSelect) {
 	case 1:
 		camera->update();

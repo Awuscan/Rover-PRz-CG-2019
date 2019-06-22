@@ -5,7 +5,6 @@
 #include "Wheel.h"
 #include "SuspensionShaft.h"
 
-
 class Rover :
 	public Solid
 {
@@ -22,13 +21,14 @@ public:
 
 	void update(WPARAM wParam);
 	void update();
-	int getVelocity() { return velocity; }
+	int* getVelocity() { return &velocity; }
+	int getAlfa() { return alfa; }
 	GLfloat getPosx() { return pos[0]; }
 	GLfloat getPosy() { return pos[1]; }
 	GLfloat getPosz() { return pos[2]; }
 	void collision();
 
-
+private:
 	GLfloat width = 20;
 	GLfloat length = 30;
 	GLfloat height = 10;
@@ -43,9 +43,8 @@ public:
 	GLfloat suspensionColor[3] = { 0.5,0.5,0.5 };
 	GLfloat suspensionShaftColor[3] = { 0.4,0.4,0.4 };
 
-	float velocity = 0;
-	float velocityTarget = 0;
-	//int swingRadius = 0;
+	int velocity = 0;
+	int velocityTarget = 0;
 
 	int alfa = 0;
 	int alfaTarget = 0;
@@ -83,12 +82,12 @@ public:
 	Wheel wrc{ posWRC,wheelRadius,wheelWidth,wheelColor };
 	Wheel wrb{ posWRB,wheelRadius,wheelWidth,wheelColor };
 
-	SuspensionArm  salf{ posBSLF,posWSLF,wheelArmWidth,suspensionColor }; //suspension arm left front
-	SuspensionArm  salc{ posBSLB,posWSLC,wheelArmWidth,suspensionColor };
-	SuspensionArm  salb{ posBSLB,posWSLB,wheelArmWidth,suspensionColor };
-	SuspensionArm  sarf{ posBSRF,posWSRF,wheelArmWidth,suspensionColor };
-	SuspensionArm  sarc{ posBSRB,posWSRC,wheelArmWidth,suspensionColor };
-	SuspensionArm  sarb{ posBSRB,posWSRB,wheelArmWidth,suspensionColor };
+	SuspensionArm salf{ posBSLF,posWSLF,wheelArmWidth,suspensionColor }; //suspension arm left front
+	SuspensionArm salc{ posBSLB,posWSLC,wheelArmWidth,suspensionColor };
+	SuspensionArm salb{ posBSLB,posWSLB,wheelArmWidth,suspensionColor };
+	SuspensionArm sarf{ posBSRF,posWSRF,wheelArmWidth,suspensionColor };
+	SuspensionArm sarc{ posBSRB,posWSRC,wheelArmWidth,suspensionColor };
+	SuspensionArm sarb{ posBSRB,posWSRB,wheelArmWidth,suspensionColor };
 
 	SuspensionShaft wslf{ posWSLF,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor }; //suspension wheel left front
 	SuspensionShaft wslc{ posWSLC,suspensionShaftRadius,suspensionShaftLenght,suspensionShaftColor };

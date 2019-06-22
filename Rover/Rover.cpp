@@ -115,7 +115,6 @@ void Rover::draw()
 {
 	glPushMatrix();
 
-
 	glTranslatef(pos[0], pos[1], pos[2]);
 	glRotatef(alfa, 0.0f, 0.0f, 1.0f); 
 	glTranslatef(-pos[0], -pos[1], -pos[2]);
@@ -132,25 +131,22 @@ void Rover::drawWheels()
 	if (velocity < 0) {
 		sign = 1;
 	}
+	if(alfa > alfaTarget)
+		sign = sign * abs(alfa - alfaTarget);
+	if (alfa < alfaTarget)
+		sign = -sign * abs(alfa - alfaTarget);
+
 	glPushMatrix();
-	if (alfa > alfaTarget && velocity != 0)
-	{
-		rotate(sign * 15, posWLF);
-	}else if (alfa < alfaTarget && velocity != 0)
-	{
-		rotate(sign * -15, posWLF);
-	}else if (velocity == 0 && alfa != alfaTarget) {
+	if (velocity != 0)
+		rotate(sign, posWLF);
+	else if (velocity == 0 && alfa != alfaTarget)
 		rotate(-45, posWLF);
-	}
 	wlf.draw();
 	glPopMatrix();
 
 	glPushMatrix();
-	if (alfa > alfaTarget && velocity != 0) {
-		rotate(sign * 15, posWRF);
-	}
-	else if (alfa < alfaTarget && velocity != 0) {
-		rotate(sign * -15, posWRF);
+	if (velocity != 0) {
+		rotate(sign, posWRF);
 	}
 	else if (velocity == 0 && alfa != alfaTarget) {
 		rotate(45, posWRF);
@@ -158,38 +154,30 @@ void Rover::drawWheels()
 	wrf.draw();
 	glPopMatrix();
 
-
 	wlc.draw();
 	wrc.draw();
 
-
 	glPushMatrix();
-	if (alfa > alfaTarget && velocity != 0) {
-		rotate(sign * -15, posWLB);
-	}
-	else if (alfa < alfaTarget && velocity != 0) {
-		rotate(sign * 15, posWLB);
+	if (velocity != 0) {
+		rotate(-sign, posWLB);
 	}
 	else if (velocity == 0 && alfa != alfaTarget) {
-		rotate(-45, posWLB);
+		rotate(45, posWLB);
 	}
 	wlb.draw();
 	glPopMatrix();
 
 	glPushMatrix();
-	if (alfa > alfaTarget && velocity != 0) {
-		rotate(sign * -15, posWRB);
-	}
-	else if (alfa < alfaTarget && velocity != 0) {
-		rotate(sign * 15, posWRB);
+	if (velocity != 0) {
+		rotate(-sign, posWRB);
 	}
 	else if (velocity == 0 && alfa != alfaTarget) {
-		rotate(45, posWRB);
+		rotate(-45, posWRB);
 	}
 	wrb.draw();
 	glPopMatrix();
-
 }
+
 void Rover::drawSusp()
 {
 	salf.draw();
@@ -341,16 +329,20 @@ void Rover::update(WPARAM wParam)
 	}
 
 	if (wParam == 'I')
-		velocity += constVelocity;
+		velocityTarget += constVelocity;
 
 	if (wParam == 'K')
-		velocity -= constVelocity;
+		velocityTarget -= constVelocity;
 
-	if (wParam == 'J')
+	if (wParam == 'J') {
+		alfaTarget = alfa;
 		alfaTarget += 10;
+	}
 
-	if (wParam == 'L')
+	if (wParam == 'L') {
+		alfaTarget = alfa;
 		alfaTarget -= 10;
+	}
 }
 
 void Rover::update()

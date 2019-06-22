@@ -92,6 +92,4 @@ void Box::draw()
 			glEnd();
 		}
 	};
-
-
 }
